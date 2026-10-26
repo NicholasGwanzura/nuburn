@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <!-- @meta -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/store.js" defer></script>
+  <script src="/checkout.js" defer></script>
+</head>
+<body class="inner-page">
+  <!-- @header -->
+  <main id="main" class="section-wrap checkout-page">
+    <div class="checkout-head"><p class="eyebrow">ALMOST YOURS</p><h1>Your <em>bag.</em></h1></div>
+    <div class="checkout-grid" id="checkout-root">
+      <section class="checkout-items" aria-labelledby="items-title">
+        <h2 id="items-title" class="sr-only">Items</h2>
+        <ul class="bag-lines" id="checkout-lines"></ul>
+        <div class="bag-total checkout-total"><span>Subtotal</span><strong id="checkout-subtotal"></strong></div>
+        <p class="bag-note">Delivery costs, if any, are confirmed with you before payment.</p>
+      </section>
+      <form class="checkout-form" id="checkout-form" novalidate>
+        <div class="payment-soon"><span aria-hidden="true">✳</span><div><strong>Online payment is coming soon</strong><p>Send your order request now and we’ll contact you to confirm payment and delivery. Nothing is charged today.</p></div></div>
+        <label>Full name<input name="name" autocomplete="name" required></label>
+        <label>Phone / WhatsApp<input name="phone" type="tel" autocomplete="tel" required></label>
+        <label>Email <small>(optional)</small><input name="email" type="email" autocomplete="email"></label>
+        <fieldset class="choice-row"><legend>How would you like to receive it?</legend>
+          <label><input type="radio" name="fulfilment" value="delivery" checked> Delivery</label>
+          <label><input type="radio" name="fulfilment" value="collection"> Collection</label>
+        </fieldset>
+        <label data-address>Delivery address<textarea name="address" rows="3" autocomplete="street-address"></textarea></label>
+        <label>Notes <small>(optional)</small><textarea name="notes" rows="2" placeholder="Anything we should know?"></textarea></label>
+        <p class="form-error" id="form-error" role="alert" hidden></p>
+        <button class="button button-dark" type="submit">Send order request <span aria-hidden="true">↗</span></button>
+      </form>
+    </div>
+  </main>
+  <!-- @footer -->
+</body>
+</html>

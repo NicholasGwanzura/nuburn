@@ -1,0 +1,9 @@
+.env
+.git
+.openai/
+data/
+node_modules/
+npm-debug.log*
+*.db
+*.db-shm
+*.db-wal

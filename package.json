@@ -1,0 +1,19 @@
+{
+  "name": "nuburn-store",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Nuburn Designs online store with product admin",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "seed:demo": "node scripts/seed-demo.js"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "multer": "^2.0.2"
+  }
+}
