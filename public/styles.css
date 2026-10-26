@@ -371,6 +371,9 @@ a.product-card:hover .product-illustration{transform:translateY(-4px);transition
 /* ---------- responsive ---------- */
 @media(max-width:1080px){
   .product-grid{grid-template-columns:repeat(3,1fr)}
+  .header-main{gap:20px}
+  .header-search{max-width:min(440px,40vw)}
+  .primary-nav{gap:30px}
 }
 @media(max-width:900px){
   .hero{grid-template-columns:1fr;gap:40px;padding-top:40px}
@@ -523,11 +526,6 @@ a.product-card:hover .product-illustration{transform:translateY(-4px);transition
 .contact-banner{border-radius:0;background:#174b3b}
 .site-footer{background:#fff}
 
-@media(max-width:1080px){
-  .header-main{gap:20px}
-  .header-search{max-width:min(440px,40vw)}
-  .primary-nav{gap:30px}
-}
 @media(max-width:720px){
   :root{--header-h:116px}
   .hero{width:calc(100% - 32px);gap:28px;padding:28px 0 36px}
