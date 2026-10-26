@@ -11,6 +11,8 @@
   if (!slug) return notFound();
 
   Promise.all([api(`/api/products/${encodeURIComponent(slug)}`), settingsReady]).then(([p]) => {
+    const stockBySize = p.stockBySize || {};
+    const stockForSize = (size) => Object.hasOwn(stockBySize, size) ? Number(stockBySize[size]) : p.stock;
     document.querySelector('#crumb-category').textContent = p.category.replace(/-/g, ' ');
     const soldOut = p.stock <= 0;
     const thumbs = p.images.length > 1 ? `<div class="gallery-thumbs">${p.images.map((img, i) => `<button type="button" class="${i ? '' : 'active'}" data-src="${escapeHtml(img.url)}" aria-label="Show image ${i + 1}"><img src="${escapeHtml(img.url)}" alt=""></button>`).join('')}</div>` : '';
@@ -25,7 +27,7 @@
         <h1>${escapeHtml(p.name)}</h1>
         <div class="detail-price">${priceHtml(p)}</div>
         <p class="detail-stock availability${soldOut ? ' sold-out' : ''}">${escapeHtml(p.availability)}</p>
-        ${p.sizes.length ? `<fieldset class="size-picker"><legend>Choose a size</legend>${p.sizes.map((s) => `<label><input type="radio" name="size" value="${escapeHtml(s)}"${p.sizes.length === 1 ? ' checked' : ''}><span>${escapeHtml(s)}</span></label>`).join('')}</fieldset>` : ''}
+        ${p.sizes.length ? `<fieldset class="size-picker"><legend>Choose a size</legend>${p.sizes.map((s) => { const available = stockForSize(s); return `<label class="${available <= 0 ? 'unavailable' : ''}"><input type="radio" name="size" value="${escapeHtml(s)}"${p.sizes.length === 1 && available > 0 ? ' checked' : ''}${available <= 0 ? ' disabled' : ''}><span>${escapeHtml(s)}${available <= 0 ? ' · Sold out' : ''}</span></label>`; }).join('')}</fieldset>` : ''}
         <div class="detail-actions">
           <div class="qty qty-large" role="group" aria-label="Quantity"><button type="button" data-step="-1" aria-label="Decrease quantity">−</button><span id="detail-qty">1</span><button type="button" data-step="1" aria-label="Increase quantity">+</button></div>
           <button class="button button-dark" id="add-to-bag" type="button"${soldOut ? ' disabled' : ''}>${soldOut ? 'Sold out' : 'Add to bag <span aria-hidden="true">↗</span>'}</button>
@@ -37,8 +39,12 @@
     </div>`;
 
     let qty = 1;
+    const selectedStock = () => {
+      const size = root.querySelector('input[name="size"]:checked')?.value || '';
+      return size && Object.hasOwn(stockBySize, size) ? stockForSize(size) : p.stock;
+    };
     root.querySelectorAll('.detail-actions [data-step]').forEach((b) => b.addEventListener('click', () => {
-      qty = Math.max(1, Math.min(qty + Number(b.dataset.step), Math.max(p.stock, 1), 20));
+      qty = Math.max(1, Math.min(qty + Number(b.dataset.step), Math.max(selectedStock(), 1), 20));
       root.querySelector('#detail-qty').textContent = qty;
     }));
     root.querySelectorAll('.gallery-thumbs button').forEach((b) => b.addEventListener('click', () => {
@@ -53,6 +59,10 @@
       cart.add(p, size, qty);
       openBag();
     });
-    root.querySelectorAll('input[name="size"]').forEach((r) => r.addEventListener('change', () => { root.querySelector('#size-error').hidden = true; }));
+    root.querySelectorAll('input[name="size"]').forEach((r) => r.addEventListener('change', () => {
+      root.querySelector('#size-error').hidden = true;
+      qty = Math.min(qty, Math.max(selectedStock(), 1));
+      root.querySelector('#detail-qty').textContent = qty;
+    }));
   }).catch(notFound);
 })();

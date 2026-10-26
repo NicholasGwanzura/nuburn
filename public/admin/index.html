@@ -50,7 +50,8 @@
       </section>
 
       <section data-panel="products" hidden>
-        <header class="panel-head"><h1>Products</h1><div class="head-actions"><input type="search" id="product-filter" placeholder="Search products"><button class="btn btn-primary" data-new-product type="button">+ Add product</button></div></header>
+        <header class="panel-head"><h1>Products</h1><div class="head-actions"><input type="search" id="product-filter" placeholder="Search products"><select id="product-category-filter" aria-label="Filter by category"><option value="">All categories</option></select><select id="product-status-filter" aria-label="Filter by publication status"><option value="">All statuses</option><option value="published">Published</option><option value="draft">Drafts</option><option value="sold-out">Sold out</option><option value="low-stock">Low stock</option></select><button class="btn" id="export-products" type="button">Export CSV</button><button class="btn" id="import-products" type="button">Import CSV</button><input type="file" id="product-csv-input" accept=".csv,text/csv" hidden><button class="btn btn-primary" data-new-product type="button">+ Add product</button></div></header>
+        <div class="card category-manager"><div><h2>Categories</h2><p>Category changes apply to every product in that category. New categories can be entered when editing a product.</p></div><div id="category-list"></div></div>
         <div class="card table-card"><table class="table" id="products-table"><thead><tr><th></th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th></th></tr></thead><tbody></tbody></table></div>
       </section>
 
@@ -88,7 +89,8 @@
           <label>Compare-at price <small>(optional, shows as sale)</small><input name="compareAt" inputmode="decimal" placeholder="0.00"></label>
           <label>Category<input name="category" list="category-options" placeholder="clothing" required><datalist id="category-options"><option value="clothing"><option value="footwear"><option value="accessories"></datalist></label>
           <label>Stock<input name="stock" type="number" min="0" step="1" value="0" required></label>
-          <label class="full">Sizes <small>(comma separated; leave empty for one size)</small><input name="sizes" placeholder="S, M, L, XL"></label>
+          <label class="full">Sizes / options <small>(comma separated product variants)</small><input name="sizes" placeholder="S, M, L, XL"></label>
+          <label class="full">Stock by size <small>Optional. Enter one per line, for example: S: 4, M: 2. When set, the total stock is calculated from these quantities.</small><textarea name="stockBySize" rows="3" placeholder="S: 4&#10;M: 2"></textarea></label>
           <label class="full">Description<textarea name="description" rows="4"></textarea></label>
           <label>Badge <small>(optional)</small><input name="badge" maxlength="30" placeholder="NEW ARRIVAL"></label>
           <div class="color-row"><label>Card colour<input name="background" type="color" value="#ded7c8"></label><label>Accent<input name="accent" type="color" value="#bd5a3b"></label></div>
@@ -104,6 +106,8 @@
       <footer class="editor-foot"><button type="button" class="btn btn-danger" id="delete-product" hidden>Delete</button><span class="spacer"></span><button type="button" class="btn" data-close>Cancel</button><button type="submit" class="btn btn-primary" id="save-product">Save product</button></footer>
     </form>
   </dialog>
+
+  <dialog class="history-dialog" id="stock-history-dialog"><header><h2>Stock history</h2><button type="button" class="icon-btn" data-close-history aria-label="Close">✕</button></header><div id="stock-history-list"></div></dialog>
 
   <div class="toast" id="toast" role="status" hidden></div>
 </body>

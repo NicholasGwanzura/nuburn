@@ -50,7 +50,7 @@ data/             store.db + uploads/ (gitignored, the live catalogue: never del
 ## API (summary)
 
 Public: `GET /api/settings`, `GET /api/products?q=&category=&featured=`, `GET /api/products/:slug`, `GET /api/categories`, `POST /api/orders`.
-Admin (cookie session): `/api/admin/login|logout|me|stats`, CRUD `/api/admin/products`, `POST /api/admin/products/:id/images` (multipart `images`), `PUT /api/admin/products/:id/images/order`, `DELETE /api/admin/images/:id`, `GET/PATCH /api/admin/orders`, `GET/PUT /api/admin/settings`.
+Admin (cookie session): `/api/admin/login|logout|me|stats`, CRUD `/api/admin/products`, CSV `GET /api/admin/products/export.csv` and `POST /api/admin/products/import`, category list/rename `/api/admin/categories`, stock update `/api/admin/products/:id/stock` and history `/api/admin/products/:id/stock-history`, `POST /api/admin/products/:id/images` (multipart `images`), `PUT /api/admin/products/:id/images/order`, `DELETE /api/admin/images/:id`, `GET/PATCH /api/admin/orders`, `GET/PUT /api/admin/settings`.
 
 Money is stored as **integer cents** (`price_cents`). The API returns `priceCents` / `compareAtCents`; the frontend formats them with `Nuburn.money()` using the currency set in admin Settings.
 
@@ -91,7 +91,7 @@ Product photos are **not** files in the repo; the owner uploads them per product
 - Always escape user and admin content with `escapeHtml` / `esc` before putting it into HTML strings.
 - **The server is the source of truth for prices and stock.** `POST /api/orders` re-reads products and ignores client prices. Keep it that way.
 - Product images: only jpg/png/webp/gif/avif, ≤ 8 MB, ≤ 10 per upload.
-- Stock is **not** auto-decremented on order (no payment yet). The owner adjusts it manually.
+- Stock is **not** auto-decremented on order (no payment yet). The owner adjusts it manually. Products can use total stock or a per-size stock map; order requests validate the selected size when that map is set.
 - Don't put contact details or prices in HTML. They come from the DB and Settings.
 
 ## Roadmap / next steps

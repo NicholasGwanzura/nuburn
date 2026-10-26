@@ -6,7 +6,8 @@
 
   const api = async (url, options = {}) => {
     const isForm = options.body instanceof FormData;
-    const res = await fetch(url, { ...options, headers: isForm ? {} : { 'Content-Type': 'application/json' } });
+    const headers = { ...(isForm ? {} : { 'Content-Type': 'application/json' }), ...(options.headers || {}) };
+    const res = await fetch(url, { ...options, headers });
     const data = await res.json().catch(() => ({}));
     if (res.status === 401 && !url.endsWith('/login')) { showLogin(); throw new Error('Please sign in again.'); }
     if (!res.ok) throw new Error(data.error || 'Something went wrong.');
@@ -103,22 +104,92 @@
 
   // ---------- products ----------
   let products = [];
-  async function loadProducts() { products = await api('/api/admin/products'); renderProducts(); }
+  async function loadProducts() {
+    [products, categories] = await Promise.all([api('/api/admin/products'), api('/api/admin/categories')]);
+    renderCategoryOptions(); renderProducts();
+  }
+  let categories = [];
+  function renderCategoryOptions() {
+    const filter = $('#product-category-filter');
+    const selected = filter.value;
+    filter.innerHTML = '<option value="">All categories</option>' + categories.map((c) => `<option value="${esc(c.category)}">${esc(c.category)} (${c.products})</option>`).join('');
+    filter.value = selected;
+    $('#category-options').innerHTML = [...new Set(['clothing', 'footwear', 'accessories', ...categories.map((c) => c.category)])]
+      .map((value) => `<option value="${esc(value)}">`).join('');
+    $('#category-list').innerHTML = categories.length ? categories.map((c) => `<form class="category-row" data-category="${esc(c.category)}"><label>${esc(c.category)} <small>${c.products} product${c.products === 1 ? '' : 's'}</small><input name="name" value="${esc(c.category)}" required maxlength="60" aria-label="Rename ${esc(c.category)}"></label><button type="submit" class="btn btn-small">Rename</button></form>`).join('') : '<p class="empty">Categories will appear here when you add products.</p>';
+  }
   function renderProducts() {
     const term = $('#product-filter').value.trim().toLowerCase();
-    const rows = products.filter((p) => `${p.name} ${p.category} ${p.badge}`.toLowerCase().includes(term));
+    const category = $('#product-category-filter').value;
+    const status = $('#product-status-filter').value;
+    const rows = products.filter((p) => `${p.name} ${p.category} ${p.badge}`.toLowerCase().includes(term)
+      && (!category || p.category === category)
+      && (!status || (status === 'published' && p.published) || (status === 'draft' && !p.published)
+        || (status === 'sold-out' && p.stock <= 0) || (status === 'low-stock' && p.stock > 0 && p.stock <= 3)));
     $('#products-table tbody').innerHTML = rows.length ? rows.map((p) => `<tr data-id="${p.id}">
         <td><div class="thumb" style="background:${esc(p.background)}">${p.images[0] ? `<img src="${esc(p.images[0].url)}" alt="">` : ''}</div></td>
         <td><strong>${esc(p.name)}</strong>${p.featured ? ' <span class="tag">Featured</span>' : ''}<br><small>${esc(p.sizes.join(', ') || 'One size')}</small></td>
         <td>${esc(p.category)}</td>
         <td>${money(p.priceCents)}${p.compareAtCents ? `<br><small><s>${money(p.compareAtCents)}</s></small>` : ''}</td>
-        <td class="${p.stock <= 0 ? 'danger' : p.stock <= 3 ? 'warn' : ''}">${p.stock}</td>
+        <td class="${p.stock <= 0 ? 'danger' : p.stock <= 3 ? 'warn' : ''}"><div class="stock-tools"><strong>${p.stock}</strong>${Object.keys(p.stockBySize || {}).length ? `<small>${Object.entries(p.stockBySize).map(([size, count]) => `${esc(size)}: ${count}`).join(' · ')}</small><button type="button" class="link-btn" data-edit="${p.id}">Sizes</button>` : `<input type="number" min="0" step="1" value="${p.stock}" data-stock-value="${p.id}" aria-label="New stock for ${esc(p.name)}"><button type="button" class="btn btn-small" data-save-stock="${p.id}">Update</button>`}<button type="button" class="link-btn" data-stock-history="${p.id}">History</button></div></td>
         <td><span class="status ${p.published ? 'status-live' : ''}">${p.published ? 'Live' : 'Draft'}</span></td>
         <td class="row-actions">${p.published ? `<a href="/product?slug=${encodeURIComponent(p.slug)}" target="_blank" rel="noopener">View</a>` : ''}<button type="button" class="btn btn-small" data-edit="${p.id}">Edit</button></td>
       </tr>`).join('') : `<tr><td colspan="7" class="empty">${products.length ? 'No products match your search.' : 'No products yet. Add your first one.'}</td></tr>`;
   }
   $('#product-filter').addEventListener('input', renderProducts);
-  $('#products-table').addEventListener('click', (e) => { const b = e.target.closest('[data-edit]'); if (b) openEditor(products.find((p) => p.id === Number(b.dataset.edit))); });
+  $('#product-category-filter').addEventListener('change', renderProducts);
+  $('#product-status-filter').addEventListener('change', renderProducts);
+  $('#category-list').addEventListener('submit', async (e) => {
+    if (!e.target.matches('[data-category]')) return;
+    e.preventDefault();
+    const oldName = e.target.dataset.category;
+    const name = e.target.elements.name.value;
+    try {
+      const result = await api(`/api/admin/categories/${encodeURIComponent(oldName)}`, { method: 'PATCH', body: JSON.stringify({ name }) });
+      await loadProducts();
+      toast(`Category renamed to ${result.category}`);
+    } catch (ex) { toast(ex.message, true); }
+  });
+  $('#products-table').addEventListener('click', async (e) => {
+    const historyButton = e.target.closest('[data-stock-history]');
+    if (historyButton) {
+      const id = Number(historyButton.dataset.stockHistory);
+      try {
+        const entries = await api(`/api/admin/products/${id}/stock-history`);
+        $('#stock-history-list').innerHTML = entries.length ? entries.map((entry) => `<article><strong>${entry.previousStock} → ${entry.newStock}</strong><span>${esc(entry.reason || 'Stock adjustment')}</span><time>${new Date(entry.createdAt.replace(' ', 'T') + 'Z').toLocaleString()}</time></article>`).join('') : '<p class="empty">No stock adjustments recorded.</p>';
+        $('#stock-history-dialog').showModal();
+      } catch (ex) { toast(ex.message, true); }
+      return;
+    }
+    const edit = e.target.closest('[data-edit]');
+    if (edit) { openEditor(products.find((p) => p.id === Number(edit.dataset.edit))); return; }
+    const button = e.target.closest('[data-save-stock]');
+    if (!button) return;
+    const id = Number(button.dataset.saveStock);
+    const input = $(`[data-stock-value="${id}"]`);
+    button.disabled = true;
+    try {
+      const reason = window.prompt('Reason for stock adjustment (optional):', 'Stock count update');
+      if (reason === null) return;
+      const result = await api(`/api/admin/products/${id}/stock`, { method: 'PATCH', body: JSON.stringify({ stock: Number(input.value), reason }) });
+      const product = products.find((p) => p.id === id);
+      if (product) product.stock = result.stock;
+      renderProducts(); toast(`Stock updated: ${result.previousStock} → ${result.stock}`);
+    } catch (ex) { toast(ex.message, true); }
+    finally { button.disabled = false; }
+  });
+  $('[data-close-history]').addEventListener('click', () => $('#stock-history-dialog').close());
+  $('#export-products').addEventListener('click', () => { window.location.href = '/api/admin/products/export.csv'; });
+  $('#import-products').addEventListener('click', () => $('#product-csv-input').click());
+  $('#product-csv-input').addEventListener('change', async (e) => {
+    const file = e.target.files[0]; e.target.value = '';
+    if (!file) return;
+    try {
+      const result = await api('/api/admin/products/import', { method: 'POST', body: await file.text(), headers: { 'Content-Type': 'text/csv' } });
+      await loadProducts();
+      toast(`Import complete: ${result.created} added, ${result.updated} updated`);
+    } catch (ex) { toast(ex.message, true); }
+  });
   $$('[data-new-product]').forEach((b) => b.addEventListener('click', () => { switchTab('products'); openEditor(null); }));
 
   // ---------- product editor ----------
@@ -126,6 +197,13 @@
   const form = $('#product-form');
   let editing = null;      // product being edited (null = new)
   let pendingFiles = [];   // photos chosen before a new product is first saved
+
+  function syncVariantStock() {
+    const variantField = form.elements.stockBySize;
+    const totalField = form.elements.stock;
+    totalField.disabled = Boolean(variantField.value.trim());
+  }
+  form.elements.stockBySize.addEventListener('input', syncVariantStock);
 
   const centsToInput = (c) => (c == null ? '' : (c / 100).toFixed(2));
 
@@ -143,6 +221,7 @@
       form.category.value = product.category;
       form.stock.value = product.stock;
       form.sizes.value = product.sizes.join(', ');
+      form.stockBySize.value = Object.entries(product.stockBySize || {}).map(([size, quantity]) => `${size}: ${quantity}`).join('\n');
       form.description.value = product.description;
       form.badge.value = product.badge;
       form.background.value = product.background;
@@ -150,6 +229,7 @@
       form.published.checked = product.published;
       form.featured.checked = product.featured;
     }
+    syncVariantStock();
     renderImages();
     editor.showModal();
     form.elements.namedItem('name').focus();

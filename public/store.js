@@ -45,8 +45,9 @@
     add(product, size, qty = 1) {
       const items = readCart();
       const existing = items.find((i) => i.productId === product.id && i.size === size);
-      if (existing) existing.qty = Math.min(existing.qty + qty, product.stock, 20);
-      else items.push({ productId: product.id, slug: product.slug, name: product.name, priceCents: product.priceCents, image: product.images?.[0]?.url || '', category: product.category, accent: product.accent, background: product.background, size, qty: Math.min(qty, product.stock), stock: product.stock });
+      const stock = size && Object.hasOwn(product.stockBySize || {}, size) ? Number(product.stockBySize[size]) : product.stock;
+      if (existing) { existing.qty = Math.min(existing.qty + qty, stock, 20); existing.stock = stock; existing.stockBySize = product.stockBySize || {}; }
+      else items.push({ productId: product.id, slug: product.slug, name: product.name, priceCents: product.priceCents, image: product.images?.[0]?.url || '', category: product.category, accent: product.accent, background: product.background, size, qty: Math.min(qty, stock), stock, stockBySize: product.stockBySize || {} });
       writeCart(items);
     },
     setQty(index, qty) {

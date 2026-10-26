@@ -20,6 +20,7 @@ db.exec(`
     price_cents INTEGER NOT NULL DEFAULT 0,
     compare_at_cents INTEGER,
     sizes TEXT NOT NULL DEFAULT '',
+    variant_stock TEXT NOT NULL DEFAULT '{}',
     stock INTEGER NOT NULL DEFAULT 0,
     badge TEXT NOT NULL DEFAULT '',
     featured INTEGER NOT NULL DEFAULT 0,
@@ -35,6 +36,15 @@ db.exec(`
     product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
     filename TEXT NOT NULL,
     position INTEGER NOT NULL DEFAULT 0
+  );
+
+  CREATE TABLE IF NOT EXISTS stock_adjustments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+    previous_stock INTEGER NOT NULL,
+    new_stock INTEGER NOT NULL,
+    reason TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
   );
 
   CREATE TABLE IF NOT EXISTS orders (
@@ -63,6 +73,9 @@ db.exec(`
     expires_at INTEGER NOT NULL
   );
 `);
+
+const productColumns = new Set(db.prepare('PRAGMA table_info(products)').all().map((column) => column.name));
+if (!productColumns.has('variant_stock')) db.exec("ALTER TABLE products ADD COLUMN variant_stock TEXT NOT NULL DEFAULT '{}'");
 
 export const DEFAULT_SETTINGS = {
   currency: 'USD',
@@ -95,6 +108,8 @@ export function serializeProduct(row) {
   if (!row) return null;
   const images = imagesFor.all(row.id).map((img) => ({ id: img.id, url: `/uploads/${img.filename}` }));
   const stock = Number(row.stock);
+  let stockBySize = {};
+  try { stockBySize = JSON.parse(row.variant_stock || '{}'); } catch {}
   return {
     id: row.id,
     slug: row.slug,
@@ -104,6 +119,7 @@ export function serializeProduct(row) {
     priceCents: row.price_cents,
     compareAtCents: row.compare_at_cents,
     sizes: row.sizes.split(',').map((s) => s.trim()).filter(Boolean),
+    stockBySize,
     stock,
     availability: stock <= 0 ? 'Sold out' : stock <= 3 ? `Only ${stock} left` : 'In stock',
     badge: row.badge,

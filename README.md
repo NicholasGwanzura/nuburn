@@ -26,7 +26,9 @@ The admin password lives in `.env` (`ADMIN_PASSWORD`). Copy `.env.example` to `.
 
 ## Admin
 
-- **Products** — name, price, optional compare-at (sale) price, category, sizes, stock, badge, description, card colours, draft/published, featured. Upload multiple photos; the first is the cover, and arrows reorder them.
+- **Products** — name, price, optional compare-at (sale) price, category, size/options, total or per-size stock, badge, description, card colours, draft/published, featured. Upload multiple photos; the first is the cover, and arrows reorder them. Product search and filters cover category, publication and stock status; category renames apply across products.
+- **Bulk catalogue tools** — export and re-import `nuburn-products.csv`. CSV imports match existing products by `slug`, create rows for new slugs, validate the whole file before saving, and update products in one transaction. Keep the exported headers; imports support up to 500 rows and 2 MB per file. The `stockBySize` column is JSON (`{"S":4,"M":2}`); leave it `{}` to use total stock.
+- **Inventory** — update total stock from the product list or edit per-size stock in the product editor. Quick stock adjustments retain a reason and timestamp in stock history. Order requests check both total and selected-size availability; stock is still adjusted manually after payment confirmation.
 - **Orders** — order requests from checkout, with customer contact and items. Set status: awaiting payment → confirmed → fulfilled (or cancelled). Stock is not deducted automatically; adjust it on the product when you confirm a sale.
 - **Settings** — currency code, announcement bar, phone/WhatsApp/email/address/social links shown on the site.
 

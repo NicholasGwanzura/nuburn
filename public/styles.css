@@ -1,8 +1,8 @@
 /* Nuburn Designs — storefront styles */
 :root{
   --bg:#ffffff;
-  --surface:#f6f5f2;      /* image tiles, placeholders */
-  --surface-2:#efede8;
+  --surface:#ffffff;      /* neutral surfaces stay pure white */
+  --surface-2:#ffffff;
   --ink:#141413;
   --ink-soft:#3d3c38;
   --muted:#6f6d67;
@@ -327,6 +327,7 @@ a.product-card:hover .product-illustration{transform:translateY(-4px);transition
 .size-picker label:hover span{border-color:var(--ink)}
 .size-picker input:checked+span{background:var(--ink);color:#fff;border-color:var(--ink)}
 .size-picker input:focus-visible+span{outline:2px solid var(--rust);outline-offset:2px}
+.size-picker input:disabled+span{opacity:.45;text-decoration:line-through;cursor:not-allowed}
 .detail-actions{display:flex;gap:12px;align-items:stretch}
 .detail-actions .button{flex:1}
 .form-error{color:var(--rust-deep);font-size:14px;font-weight:500;margin:12px 0 0}
@@ -469,12 +470,12 @@ a.product-card:hover .product-illustration{transform:translateY(-4px);transition
   --line-strong:rgba(20,20,19,.3);
   --header-h:112px;
 }
-.announcement{background:#f3f3f0;color:#343832;font-size:11px;letter-spacing:.045em;padding:7px 16px}
+.announcement{background:#fff;color:#343832;font-size:11px;letter-spacing:.045em;padding:7px 16px}
 .site-header{display:block;height:auto;padding:0;background:#fff;backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom:1px solid var(--line)}
 .header-main{width:min(1360px,calc(100% - 64px));height:72px;margin:0 auto;display:flex;align-items:center;gap:36px}
 .wordmark{font-family:var(--sans);font-size:20px;letter-spacing:.12em;color:#174b3b;flex:none}
 .wordmark span{color:var(--muted)}
-.header-search{width:min(520px,45vw);margin:0 auto 0 30px;border-radius:2px;background:#f7f7f5;border-color:#e2e2de;padding:10px 14px}
+.header-search{width:min(520px,45vw);margin:0 auto 0 30px;border-radius:2px;background:#fff;border-color:#e2e2de;padding:10px 14px}
 .header-search:focus-within{border-color:var(--rust)}
 .header-search input::placeholder{color:#777a74}
 .header-actions{gap:14px;flex:none}
@@ -524,7 +525,7 @@ a.product-card:hover .product-illustration{transform:translateY(-4px);transition
 .arrival-note{background:rgba(20,20,19,.72);padding:10px 12px;right:16px;bottom:16px}
 .story-photo{border-radius:0}
 .contact-banner{border-radius:0;background:#174b3b}
-.site-footer{background:#f7f7f5}
+.site-footer{background:#fff}
 
 @media(max-width:1080px){
   .header-main{gap:20px}
