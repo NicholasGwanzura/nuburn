@@ -12,8 +12,8 @@
   --gold:#d9b46f;
   --line:rgba(20,20,19,.11);
   --line-strong:rgba(20,20,19,.22);
-  --sans:'Instrument Sans',system-ui,-apple-system,'Segoe UI',Arial,sans-serif;
-  --serif:'Instrument Serif',Georgia,'Times New Roman',serif;
+  --sans:'DM Sans',system-ui,-apple-system,'Segoe UI',Arial,sans-serif;
+  --serif:'DM Serif Display',Georgia,'Times New Roman',serif;
   --header-h:112px;
 }
 *{box-sizing:border-box}
@@ -55,7 +55,7 @@ h1 em,h2 em{font-family:var(--serif);font-style:italic;font-weight:400;letter-sp
 .site-header{position:sticky;top:0;z-index:20;display:block;height:auto;padding:0;background:#fff;border-bottom:1px solid var(--line)}
 .header-main{width:min(1360px,calc(100% - 64px));height:72px;margin:0 auto;display:flex;align-items:center;gap:28px}
 .wordmark{font-family:var(--sans);font-size:20px;letter-spacing:.12em;font-weight:700;line-height:1;color:var(--rust-deep);display:flex;align-items:baseline;gap:7px;flex:none}
-.wordmark span{font-size:10px;letter-spacing:.2em;font-weight:500;color:var(--muted)}
+.wordmark span{font-size:11px;letter-spacing:.16em;font-weight:500;color:var(--muted)}
 .header-search{flex:1;width:min(520px,45vw);max-width:520px;margin:0 auto;border-radius:2px;background:#fff;border-color:var(--line);padding:10px 14px}
 .header-search:focus-within{border-color:var(--rust)}
 .primary-nav{height:40px;display:flex;justify-content:center;align-items:center;gap:42px;border-top:1px solid var(--line);font-size:13px;font-weight:600}
@@ -469,7 +469,7 @@ a.product-card:hover .product-illustration{transform:translateY(-4px);transition
 }
 @media(max-width:390px){
   .wordmark{font-size:14px;gap:5px}
-  .wordmark span{font-size:8px}
+  .wordmark span{font-size:11px;letter-spacing:.08em}
   .header-actions{gap:5px}
   .header-admin{padding:7px 8px}
   .bag-button{padding:7px 8px}
@@ -490,7 +490,7 @@ a.product-card:hover .product-illustration{transform:translateY(-4px);transition
 .button-dark:hover{background:var(--rust-deep)}
 .hero{width:min(1360px,calc(100% - 64px));grid-template-columns:.9fr 1.1fr;gap:48px;padding:38px 0 48px}
 .hero h1{font-size:clamp(48px,5.6vw,78px);letter-spacing:-.035em}
-.hero h1 em,h2 em{font-family:var(--sans);font-style:normal;font-weight:600;color:var(--rust);letter-spacing:-.04em}
+.hero h1 em,h2 em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--rust);letter-spacing:-.025em}
 .hero .eyebrow{color:var(--rust)}
 .hero-art{min-height:0;max-height:none;border-radius:0;aspect-ratio:4/5;background:#e7d8c1}
 .art-sun,.art-orbit,.fashion-figure,.art-label,.art-caption,.hero-side-note{display:none}

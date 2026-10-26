@@ -57,7 +57,7 @@ Money is stored as **integer cents** (`price_cents`). The API returns `priceCent
 ## Design system (keep consistent)
 
 - **Background is white everywhere** (`--bg:#fff`). This is an explicit owner requirement. Do not add beige, cream or dark section backgrounds. Colour comes only from accent blocks (rust ticker, rust contact banner), image tiles and photos.
-- **Fonts:** `Instrument Sans` (UI/body, `--sans`) and `Instrument Serif` (`--serif`), loaded from Google Fonts in each page `<head>`. Headline pattern: sans 500 with tight tracking, plus an *italic serif accent word* in rust via `<em>`, e.g. `Style that <em>speaks.</em>`
+- **Fonts:** `DM Sans` (UI/body, `--sans`) and `DM Serif Display` (`--serif`), loaded from Google Fonts in each page `<head>`. Headline pattern: sans 500 with tight tracking, plus an *italic serif accent word* in green via `<em>`, e.g. `Style that <em>speaks.</em>`
 - **Colours:** use the CSS variables at the top of `public/styles.css` (`--ink`, `--muted`, `--rust`, `--olive`, `--gold`, `--surface`, `--line`…). Don't hard-code new colours.
 - **Readability floor:** no text below 11px; body copy 15–18px.
 - **Shapes:** pill buttons (`border-radius:999px`), rounded image tiles (14–24px), thin `--line` dividers.
