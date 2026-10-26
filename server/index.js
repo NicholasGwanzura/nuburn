@@ -141,8 +141,8 @@ function productFields(body, existing = {}) {
     badge,
     featured: Number(asBoolean(body.featured, Boolean(existing.featured))),
     published: Number(asBoolean(body.published, existing.published === undefined ? true : Boolean(existing.published))),
-    background: isHexColor(body.background ?? existing.background) ? (body.background ?? existing.background) : '#ded7c8',
-    accent: isHexColor(body.accent ?? existing.accent) ? (body.accent ?? existing.accent) : '#bd5a3b'
+    background: isHexColor(body.background ?? existing.background) ? (body.background ?? existing.background) : '#e9edf5',
+    accent: isHexColor(body.accent ?? existing.accent) ? (body.accent ?? existing.accent) : '#355fac'
   };
 }
 
@@ -507,7 +507,7 @@ app.put('/api/admin/settings', (req, res) => {
 app.use('/api', (req, res) => res.status(404).json({ error: 'Not found.' }));
 
 // ---------- storefront pages ----------
-// The three storefront pages share one header and footer (server/partials) and get
+// Storefront pages share one header and footer (server/partials) and get
 // their <title>, description and link-preview (Open Graph) tags filled in here.
 
 const PUBLIC_DIR = path.resolve('public');
@@ -560,6 +560,12 @@ const HOME_DESCRIPTION = 'Nuburn Designs brings together expressive clothing and
 
 app.get(['/', '/index.html'], (req, res) => renderPage(req, res, 'index', {
   title: 'Nuburn Designs — Style That Speaks', description: HOME_DESCRIPTION, image: '/images/hero.jpg'
+}));
+
+app.get(['/story', '/story.html'], (req, res) => renderPage(req, res, 'story', {
+  title: 'Our story — Nuburn Designs',
+  description: 'Discover the mission, vision and values behind Nuburn Designs clothing and footwear.',
+  image: '/images/story.jpg'
 }));
 
 app.get(['/product', '/product.html'], (req, res) => {

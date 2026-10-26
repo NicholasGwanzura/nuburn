@@ -18,7 +18,7 @@
   const inStockThenNewest = (a, b) => (a.stock <= 0) - (b.stock <= 0) || newestFirst(a, b);
 
   const card = (item) => `<a class="product-card${item.stock <= 0 ? ' is-sold-out' : ''}" href="/product?slug=${encodeURIComponent(item.slug)}">
-      <div class="product-image" style="--product-bg:${escapeHtml(item.background)}">${item.badge ? `<span class="product-tag">${escapeHtml(item.badge)}</span>` : ''}${item.compareAtCents ? '<span class="product-tag product-tag-sale">SALE</span>' : ''}${productVisual(item)}</div>
+      <div class="product-image" style="--product-bg:${escapeHtml(item.background)}">${item.badge ? `<span class="product-tag">${escapeHtml(item.badge)}</span>` : ''}${item.compareAtCents ? '<span class="product-tag product-tag-sale">SALE</span>' : ''}${productVisual(item)}<span class="product-view">View product <span aria-hidden="true">↗</span></span></div>
       <div class="product-info"><div class="product-title-row"><h4>${escapeHtml(item.name)}</h4>${priceHtml(item)}</div>
       <p class="product-meta"><span class="product-sizes">${escapeHtml(item.sizes.join(' · ') || 'One size')}</span><span class="product-stock${item.stock <= 3 ? ' low' : ''}">${escapeHtml(item.availability)}</span></p></div>
     </a>`;

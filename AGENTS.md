@@ -32,7 +32,8 @@ server/
   index.js        all routes, page rendering (partials + meta tags), static serving
   partials/       header.html + footer.html, shared by every storefront page
 public/           storefront (served as-is)
-  index.html      home: hero, categories, catalog, story, ordering, contact
+  index.html      home: hero, categories, catalog, ordering, contact
+  story.html      Our story: brand background, mission, vision and values
   product.html    product detail (?slug=)
   checkout.html   bag review + order request form
   favicon.svg
@@ -56,11 +57,12 @@ Money is stored as **integer cents** (`price_cents`). The API returns `priceCent
 
 ## Design system (keep consistent)
 
-- **Background is white everywhere** (`--bg:#fff`). This is an explicit owner requirement. Do not add beige, cream or dark section backgrounds. Colour comes only from accent blocks (rust ticker, rust contact banner), image tiles and photos.
-- **Fonts:** `DM Sans` (UI/body, `--sans`) and `DM Serif Display` (`--serif`), loaded from Google Fonts in each page `<head>`. Headline pattern: sans 500 with tight tracking, plus an *italic serif accent word* in green via `<em>`, e.g. `Style that <em>speaks.</em>`
-- **Colours:** use the CSS variables at the top of `public/styles.css` (`--ink`, `--muted`, `--rust`, `--olive`, `--gold`, `--surface`, `--line`…). Don't hard-code new colours.
+- **Background is white everywhere** (`--bg:#fff`). This is an explicit owner requirement. Colour comes from blue accent blocks, image tiles and photos.
+- **Logo:** `public/images/nuburn-logo.svg` is the supplied Nuburn Designs artwork. Use it in the shared header, footer and admin. Its blue (`#355fac`) is the site accent; keep the original paths intact.
+- **Fonts:** `DM Sans` (UI/body, `--sans`) and `DM Serif Display` (`--serif`), loaded from Google Fonts in each page `<head>`. Headline pattern: sans 500 with tight tracking, plus an *italic serif accent word* in blue via `<em>`, e.g. `Style that <em>speaks.</em>`
+- **Colours:** use the CSS variables at the top of `public/styles.css` (`--ink`, `--muted`, `--accent`, `--accent-dark`, `--accent-soft`, `--surface`, `--line`…). Don't hard-code new colours.
 - **Readability floor:** no text below 11px; body copy 15–18px.
-- **Shapes:** pill buttons (`border-radius:999px`), rounded image tiles (14–24px), thin `--line` dividers.
+- **Shapes:** restrained 6px buttons and filters, 10–12px image tiles and content cards, thin `--line` dividers.
 - **Breakpoints:** 1080 / 900 / 720px. Check mobile (≈390px) for every change.
 - Admin uses its own `public/admin/admin.css` (same fonts and white theme).
 
@@ -76,7 +78,7 @@ Product photos are **not** files in the repo; the owner uploads them per product
 
 ## Conventions and gotchas
 
-- **Header and footer live in `server/partials/` only.** Pages contain `<!-- @header -->`, `<!-- @footer -->` and `<!-- @meta -->` markers that the server fills in (see `renderPage` in `server/index.js`). Don't paste header/footer markup into page files, and don't add `<title>`/description tags to them: `metaTags()` generates title, description, favicon and Open Graph tags (product pages get name, price and photo for WhatsApp/Instagram link previews). Set `PUBLIC_URL` in production so preview image URLs are absolute and correct.
+- **Header and footer live in `server/partials/` only.** Pages contain `<!-- @header -->`, `<!-- @footer -->` and `<!-- @meta -->` markers that the server fills in (see `renderPage` in `server/index.js`). Don't paste header/footer markup into page files, and don't add `<title>`/description tags to them: `metaTags()` generates title, description, favicon and Open Graph tags (product pages get name, price and photo for WhatsApp/Instagram link previews). Set `PUBLIC_URL` in production so preview image URLs are absolute and correct. Keep mission, vision and values on `/story` so the homepage leads with shopping.
 - Catalog links work from any page: `/?category=clothing#catalog`, `/?category=new#catalog` (8 newest products), `/?q=search`. On the home page `site.js` applies them in place.
 - Prices are formatted with `Intl.NumberFormat('en', { currencyDisplay: 'narrowSymbol' })` and no decimals for whole amounts ("$75", "$45.50"), in `store.js`, `admin.js` and `formatMoney()` on the server. Keep all three consistent.
 - The admin resizes photos in the browser before upload (`shrinkImage` in `admin.js`, max 1600px JPEG) and polls for new orders every 45s (badge, tab title, optional browser notification).

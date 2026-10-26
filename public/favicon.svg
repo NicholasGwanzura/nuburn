@@ -1,1 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#174b3b"/><text x="32" y="45" text-anchor="middle" font-family="Helvetica Neue,Arial,sans-serif" font-size="38" font-weight="700" fill="#ffffff">N</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="28 43 140 116">
+<defs>
+    <style>
+      .cls-1 {
+        fill: #355fac;
+      }
+    </style>
+  </defs>
+<g>
+    <path class="cls-1" d="M98.42,130.51c0-15.1-12.24-27.34-27.34-27.34,15.1,0,27.34-12.24,27.34-27.34,0,15.1,12.24,27.34,27.34,27.34-15.1,0-27.34,12.24-27.34,27.34Z"/>
+    <path class="cls-1" d="M77.61,123.95h28.46c0,14.98-12.16,27.14-27.14,27.14h-28.46c0-14.98,12.16-27.14,27.14-27.14Z" transform="translate(215.79 59.24) rotate(90)"/>
+    <path class="cls-1" d="M132.06,109.72h28.46c0,14.98-12.16,27.14-27.14,27.14h-28.46c0-14.98,12.16-27.14,27.14-27.14Z"/>
+    <path class="cls-1" d="M117.85,55.26h28.46c0,14.98-12.16,27.14-27.14,27.14h-28.46c0-14.98,12.16-27.14,27.14-27.14Z" transform="translate(49.69 187.34) rotate(-90)"/>
+    <path class="cls-1" d="M63.44,69.46h28.46c0,14.98-12.16,27.14-27.14,27.14h-28.46c0-14.98,12.16-27.14,27.14-27.14Z"/>
+  </g>
+</svg>

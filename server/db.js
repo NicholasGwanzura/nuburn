@@ -25,8 +25,8 @@ db.exec(`
     badge TEXT NOT NULL DEFAULT '',
     featured INTEGER NOT NULL DEFAULT 0,
     published INTEGER NOT NULL DEFAULT 1,
-    background TEXT NOT NULL DEFAULT '#ded7c8',
-    accent TEXT NOT NULL DEFAULT '#bd5a3b',
+    background TEXT NOT NULL DEFAULT '#e9edf5',
+    accent TEXT NOT NULL DEFAULT '#355fac',
     created_at TEXT NOT NULL DEFAULT (datetime('now')),
     updated_at TEXT NOT NULL DEFAULT (datetime('now'))
   );
