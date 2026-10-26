@@ -18,6 +18,8 @@ if (!process.env.ADMIN_PASSWORD) {
 
 const app = express();
 app.disable('x-powered-by');
+// Dokploy terminates HTTPS at Traefik; honour its forwarded scheme for share URLs.
+app.set('trust proxy', 1);
 app.use(express.json({ limit: '1mb' }));
 
 // ---------- helpers ----------

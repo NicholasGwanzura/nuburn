@@ -25,15 +25,17 @@
     const t = $('#toast'); t.textContent = msg; t.classList.toggle('toast-error', isError); t.hidden = false;
     clearTimeout(toast.timer); toast.timer = setTimeout(() => { t.hidden = true; }, 3200);
   };
+  const baseTitle = document.title;
+  let alertTimer = null;
 
   // ---------- auth ----------
-  const showLogin = () => { $('#app-view').hidden = true; $('#login-view').hidden = false; $('#login-form [name=password]').focus(); };
-  const showApp = async () => { $('#login-view').hidden = true; $('#app-view').hidden = false; await loadSettings(); switchTab(location.hash.slice(1) || 'dashboard'); startOrderAlerts(); };
+  const showLogin = () => { clearInterval(alertTimer); document.title = baseTitle; $('#app-view').hidden = true; $('#login-view').hidden = false; $('#login-form [name=password]').focus(); };
+  const showApp = async () => { await loadSettings(); $('#login-view').hidden = true; $('#app-view').hidden = false; switchTab(location.hash.slice(1) || 'dashboard'); startOrderAlerts(); };
 
   $('#login-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const err = $('#login-error'); err.hidden = true;
-    try { await api('/api/admin/login', { method: 'POST', body: JSON.stringify({ password: e.target.password.value }) }); e.target.reset(); showApp(); }
+    try { await api('/api/admin/login', { method: 'POST', body: JSON.stringify({ password: e.target.password.value }) }); e.target.reset(); await showApp(); }
     catch (ex) { err.textContent = ex.message; err.hidden = false; }
   });
   $('#logout').addEventListener('click', async () => { clearInterval(alertTimer); await api('/api/admin/logout', { method: 'POST' }).catch(() => {}); showLogin(); });
@@ -66,9 +68,6 @@
   const SEEN_KEY = 'nuburn_admin_seen_order';
   const readSeen = () => { try { return Number(localStorage.getItem(SEEN_KEY)) || 0; } catch { return 0; } };
   const writeSeen = (id) => { try { localStorage.setItem(SEEN_KEY, String(id)); } catch {} };
-  const baseTitle = document.title;
-  let alertTimer = null;
-
   function updateOrderBadge(s) {
     const pill = $('#orders-pill'); pill.textContent = s.orders.awaiting; pill.hidden = !s.orders.awaiting;
     document.title = s.orders.awaiting ? `(${s.orders.awaiting}) ${baseTitle}` : baseTitle;
