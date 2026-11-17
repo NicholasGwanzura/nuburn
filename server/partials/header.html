@@ -1,12 +1,28 @@
   <a class="skip-link" href="#main">Skip to content</a>
-  <p class="announcement" id="announcement">Nuburn Designs · Garment manufacturing and retail</p>
-  <header class="site-header">
-    <div class="header-main">
-      <a class="wordmark" href="/" aria-label="Nuburn Designs home"><img src="/images/nuburn-logo.svg" alt=""></a>
-      <form class="search-box header-search" action="/shop" method="get" role="search"><label class="sr-only" for="product-search">Search products</label><span aria-hidden="true">⌕</span><input id="product-search" name="q" type="search" placeholder="Search clothing &amp; footwear" autocomplete="off" enterkeyhint="search"></form>
-      <div class="header-actions"><button class="bag-button" type="button" data-open-bag aria-label="Open your bag">Bag <span class="bag-count" data-cart-count hidden>0</span></button><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" aria-label="Open menu"><span></span><span></span></button></div>
+  <p class="announcement" id="announcement">Garment manufacturing &amp; ready-to-wear · Made to order for schools, teams and you</p>
+  <header class="site-header" data-site-header>
+    <div class="hd-bar">
+      <a class="hd-logo" href="/" aria-label="Nuburn Designs home"><img src="/images/nuburn-logo.svg" alt="" width="160" height="58"></a>
+      <nav id="primary-nav" class="hd-nav" aria-label="Main navigation">
+        <a href="/" data-nav="manufacturing">Manufacturing</a>
+        <a href="/shop" data-nav="shop">Shop</a>
+        <a href="/story" data-nav="story">Our Story</a>
+        <a href="/#manufacturing-enquiry" data-nav="contact">Contact</a>
+        <a class="button hd-nav-cta" href="/#manufacturing-enquiry">Request a Quote</a>
+      </nav>
+      <div class="hd-actions">
+        <button class="hd-icon" type="button" data-search-toggle aria-expanded="false" aria-controls="site-search" aria-label="Search the store"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></button>
+        <button class="hd-icon hd-bag" type="button" data-open-bag aria-label="Open your bag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 8.5h13l-1 11.5h-11z"/><path d="M9 8.5V7a3 3 0 0 1 6 0v1.5"/></svg><span class="bag-count" data-cart-count hidden>0</span></button>
+        <a class="hd-quote" href="/#manufacturing-enquiry">Request a Quote</a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" aria-label="Open menu"><span></span><span></span></button>
+      </div>
     </div>
-    <nav id="primary-nav" class="primary-nav" aria-label="Main navigation">
-      <a href="/">Manufacturing</a><a href="/shop">Shop</a><a href="/story">Our story</a><a href="/#manufacturing-enquiry">Contact</a>
-    </nav>
+    <div class="hd-search" id="site-search" hidden>
+      <form class="hd-search-form" action="/shop" method="get" role="search">
+        <label class="sr-only" for="product-search">Search products</label>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+        <input id="product-search" name="q" type="search" placeholder="Search clothing &amp; footwear" autocomplete="off" enterkeyhint="search">
+        <button class="hd-search-close" type="button" data-search-toggle aria-label="Close search">Close</button>
+      </form>
+    </div>
   </header>

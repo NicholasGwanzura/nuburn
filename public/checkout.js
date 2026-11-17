@@ -16,7 +16,7 @@
   const render = () => {
     const items = cart.items();
     if (!items.length) {
-      root.innerHTML = '<div class="empty-catalog"><span class="empty-star" aria-hidden="true">✳</span><h4>Your bag is empty.</h4><p>Find something you love in the collection.</p><a href="/shop#catalog">Explore the edit →</a></div>';
+      root.innerHTML = '<div class="empty-catalog"><h4>Your Bag Is Empty.</h4><p>Find something you love in the collection.</p><a href="/shop#catalog">Explore the Edit →</a></div>';
       return;
     }
     document.querySelector('#checkout-lines').innerHTML = items.map(lineHtml).join('');
@@ -46,12 +46,12 @@
         `Name: ${data.name.trim()}`
       ].join('\n'));
       root.innerHTML = `<div class="order-confirmed">
-          <span class="empty-star" aria-hidden="true">✳</span>
+          
           <p class="eyebrow">ORDER REQUEST RECEIVED</p>
-          <h2>Thank you, ${escapeHtml(data.name.split(' ')[0])}.</h2>
+          <h2>Thank You, ${escapeHtml(data.name.split(' ')[0])}.</h2>
           <p>Your reference is <strong>${escapeHtml(order.reference)}</strong>. We’ll be in touch on ${escapeHtml(data.phone)} to confirm payment and ${data.fulfilment === 'collection' ? 'collection' : 'delivery'}.${wa ? ' For the fastest reply, send us your order on WhatsApp now.' : ''}</p>
           <ul class="confirm-lines">${order.items.map((i) => `<li><span>${escapeHtml(i.name)}${i.size ? ` · ${escapeHtml(i.size)}` : ''} × ${i.qty}</span><span>${money(i.lineCents)}</span></li>`).join('')}<li class="confirm-total"><span>Subtotal</span><span>${money(order.subtotalCents)}</span></li></ul>
-          <div class="hero-actions">${wa ? `<a class="button button-dark" href="https://wa.me/${wa}?text=${waText}" target="_blank" rel="noopener">Send my order on WhatsApp <span aria-hidden="true">↗</span></a>` : ''}<a class="text-link" href="/shop#catalog">Keep shopping →</a></div>
+          <div class="hero-actions">${wa ? `<a class="button button-dark" href="https://wa.me/${wa}?text=${waText}" target="_blank" rel="noopener">Send My Order on WhatsApp</a>` : ''}<a class="text-link" href="/shop#catalog">Keep Shopping →</a></div>
         </div>`;
     } catch (err) {
       error.textContent = err.message;

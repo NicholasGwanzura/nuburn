@@ -13,6 +13,6 @@ const insert = db.prepare(`INSERT OR IGNORE INTO products (slug, name, descripti
   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
 for (const [name, category, price, compare, sizes, stock, badge, bg, accent, featured] of demo) {
   const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-  insert.run(slug, name, `Sample product — replace with your own description.\n\nA versatile ${category === 'footwear' ? 'pair' : 'piece'} for everyday style.`, category, price, compare, sizes, stock, badge, bg, accent, featured);
+  insert.run(slug, name, `Sample product. Replace with your own description.\n\nA versatile ${category === 'footwear' ? 'pair' : 'piece'} for everyday style.`, category, price, compare, sizes, stock, badge, bg, accent, featured);
 }
 console.log(`Demo products added (${demo.length}).`);

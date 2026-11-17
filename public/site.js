@@ -18,7 +18,7 @@
   const inStockThenNewest = (a, b) => (a.stock <= 0) - (b.stock <= 0) || newestFirst(a, b);
 
   const card = (item) => `<a class="product-card${item.stock <= 0 ? ' is-sold-out' : ''}" href="/product?slug=${encodeURIComponent(item.slug)}">
-      <div class="product-image" style="--product-bg:${escapeHtml(item.background)}">${item.badge ? `<span class="product-tag">${escapeHtml(item.badge)}</span>` : ''}${item.compareAtCents ? '<span class="product-tag product-tag-sale">SALE</span>' : ''}${productVisual(item)}<span class="product-view">View product <span aria-hidden="true">↗</span></span></div>
+      <div class="product-image" style="--product-bg:${escapeHtml(item.background)}">${item.badge ? `<span class="product-tag">${escapeHtml(item.badge)}</span>` : ''}${item.compareAtCents ? '<span class="product-tag product-tag-sale">SALE</span>' : ''}${productVisual(item)}<span class="product-view">View product</span></div>
       <div class="product-info"><div class="product-title-row"><h4>${escapeHtml(item.name)}</h4>${priceHtml(item)}</div>
       <p class="product-meta"><span class="product-sizes">${escapeHtml(item.sizes.join(' · ') || 'One size')}</span><span class="product-stock${item.stock <= 3 ? ' low' : ''}">${escapeHtml(item.availability)}</span></p></div>
     </a>`;
@@ -48,7 +48,7 @@
 
   const render = () => {
     if (!products.length) {
-      grid.innerHTML = `<div class="empty-catalog"><span class="empty-star" aria-hidden="true">✳</span><h4>The first edit is on its way.</h4><p>Our clothing and footwear collection will be here soon. Get in touch to ask about current pieces, sizes and availability.</p><a href="#contact">Ask us about the collection →</a></div>`;
+      grid.innerHTML = `<div class="empty-catalog"><h4>The First Edit Is on Its Way.</h4><p>Our clothing and footwear collection will be here soon. Get in Touch to ask about current pieces, sizes and availability.</p><a href="#contact">Ask Us About the Collection →</a></div>`;
       return;
     }
     const term = (search?.value || '').trim().toLowerCase();
@@ -56,7 +56,7 @@
       && `${item.name} ${item.category} ${item.badge} ${item.description}`.toLowerCase().includes(term));
     if (currentFilter === 'new') visible = visible.sort(inStockThenNewest);
     if (visible.length) { grid.innerHTML = visible.map(card).join(''); return; }
-    grid.innerHTML = `<div class="empty-catalog"><h4>No pieces found${term ? ` for “${escapeHtml(term)}”` : ''}.</h4><p>Try another search or browse the full collection.</p><button type="button" class="text-link" data-clear-filters>Show everything →</button></div>`;
+    grid.innerHTML = `<div class="empty-catalog"><h4>No Pieces Found${term ? ` for “${escapeHtml(term)}”` : ''}.</h4><p>Try another search or browse the full collection.</p><button type="button" class="text-link" data-clear-filters>Show Everything →</button></div>`;
   };
 
   const showCatalog = () => catalog?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -92,5 +92,5 @@
       renderFilters(); render();
       if (params.has('category') || params.has('q')) requestAnimationFrame(showCatalog);
     })
-    .catch(() => { grid.innerHTML = '<div class="empty-catalog"><h4>We couldn’t load the collection.</h4><p>Please refresh the page in a moment.</p></div>'; });
+    .catch(() => { grid.innerHTML = '<div class="empty-catalog"><h4>We Couldn’t Load the Collection.</h4><p>Please refresh the page in a moment.</p></div>'; });
 })();

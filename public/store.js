@@ -75,15 +75,15 @@
   drawer.hidden = true;
   drawer.innerHTML = `<div class="bag-backdrop" data-close-bag></div>
     <aside class="bag-panel" role="dialog" aria-modal="true" aria-labelledby="bag-title">
-      <div class="bag-head"><h2 id="bag-title">Your bag</h2><button type="button" class="bag-close" data-close-bag aria-label="Close bag">✕</button></div>
+      <div class="bag-head"><h2 id="bag-title">Your Bag</h2><button type="button" class="bag-close" data-close-bag aria-label="Close bag">✕</button></div>
       <ul class="bag-lines"></ul>
-      <div class="bag-foot"><div class="bag-total"><span>Subtotal</span><strong></strong></div><p class="bag-note">Prices shown are final item prices. Delivery and payment are confirmed with you after you send your order.</p><a class="button button-dark bag-checkout" href="/checkout">Review &amp; order <span aria-hidden="true">↗</span></a></div>
+      <div class="bag-foot"><div class="bag-total"><span>Subtotal</span><strong></strong></div><p class="bag-note">Prices shown are final item prices. Delivery and payment are confirmed with you after you send your order.</p><a class="button button-dark bag-checkout" href="/checkout">Review &amp; Order</a></div>
     </aside>`;
   document.body.appendChild(drawer);
 
   const renderDrawer = () => {
     const items = readCart();
-    drawer.querySelector('.bag-lines').innerHTML = items.length ? items.map(cartLineHtml).join('') : '<li class="bag-empty"><span aria-hidden="true">✳</span><p>Your bag is empty.</p><a class="text-link" href="/shop#catalog" data-close-bag>Explore the edit →</a></li>';
+    drawer.querySelector('.bag-lines').innerHTML = items.length ? items.map(cartLineHtml).join('') : '<li class="bag-empty"><p>Your Bag Is Empty.</p><a class="text-link" href="/shop#catalog" data-close-bag>Explore the Edit →</a></li>';
     drawer.querySelector('.bag-total strong').textContent = money(cart.subtotal());
     drawer.querySelector('.bag-foot').hidden = !items.length;
     document.querySelectorAll('[data-cart-count]').forEach((el) => { const n = cart.count(); el.textContent = n; el.hidden = !n; });
@@ -107,6 +107,8 @@
 
   // ---------- header, contact, footer ----------
   const contactDefaults = {phone:'Business phone coming soon',whatsapp:'WhatsApp number coming soon',email:'Email address coming soon',address:'Address to be confirmed',instagram:'Instagram page coming soon',facebook:'Facebook page coming soon'};
+  const ICON_PIN = '<svg class="office-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></svg>';
+  const ICON_PHONE = '<svg class="office-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 3.5h3l1.5 4-2 1.3a11 11 0 0 0 7.2 7.2l1.3-2 4 1.5v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 3.5 5.7a2 2 0 0 1 2-2.2z"/></svg>';
   settingsReady.then((contact) => {
     renderDrawer();
     document.querySelectorAll('[data-office-directory]').forEach((container) => {
@@ -114,19 +116,20 @@
       if (!offices.length) { container.hidden = true; return; }
       const heading = document.createElement('div');
       heading.className = 'office-directory-heading';
-      heading.innerHTML = '<p class="eyebrow">FIND NUBURN</p><h2>Our <em>offices.</em></h2>';
+      heading.innerHTML = '<p class="eyebrow">FIND NUBURN</p><h2>Our <em>Offices.</em></h2>';
       const grid = document.createElement('div');
       grid.className = 'office-directory-grid';
       for (const office of offices) {
         const card = document.createElement('article');
         card.className = 'office-card';
         const title = document.createElement('h3'); title.textContent = office.city || 'Office'; card.append(title);
-        const address = document.createElement('p'); address.className = 'office-address'; address.textContent = office.address || ''; card.append(address);
+        const address = document.createElement('p'); address.className = 'office-address';
+        address.innerHTML = ICON_PIN; const addressText = document.createElement('span'); addressText.textContent = office.address || ''; address.append(addressText); card.append(address);
         for (const contactItem of office.phones || []) {
           const phone = document.createElement('a');
           phone.className = 'office-phone';
           phone.href = `tel:${String(contactItem.number || '').replace(/[^+\d]/g, '')}`;
-          phone.textContent = contactItem.label ? `${contactItem.label}: ${contactItem.number}` : contactItem.number || '';
+          phone.innerHTML = ICON_PHONE; const phoneText = document.createElement('span'); phoneText.textContent = contactItem.label ? `${contactItem.label}: ${contactItem.number}` : contactItem.number || ''; phone.append(phoneText);
           card.append(phone);
         }
         grid.append(card);
@@ -153,7 +156,7 @@
     const whatsapp = (contact.whatsapp || '').replace(/\D/g,'');
     if (wa) {
       const setButton = (href, text) => { wa.href = href; wa.firstChild.textContent = `${text} `; wa.hidden = false; };
-      if (whatsapp) { setButton(`https://wa.me/${whatsapp}?text=${encodeURIComponent('Hi Nuburn Designs, I’d love to ask about the collection.')}`, 'Chat with us on WhatsApp'); wa.target = '_blank'; wa.rel = 'noopener'; }
+      if (whatsapp) { setButton(`https://wa.me/${whatsapp}?text=${encodeURIComponent('Hi Nuburn Designs, I’d love to ask about the collection.')}`, 'Chat with Us on WhatsApp'); wa.target = '_blank'; wa.rel = 'noopener'; }
       else if (contact.email) setButton(`mailto:${contact.email}`, 'Email us');
       else if (contact.phone) setButton(`tel:${contact.phone.replace(/[^+\d]/g,'')}`, 'Call us');
     }
@@ -164,10 +167,62 @@
 
   const year = document.querySelector('#year');
   if (year) year.textContent = new Date().getFullYear();
+  const header = document.querySelector('[data-site-header]');
   const toggle = document.querySelector('.menu-toggle');
   const nav = document.querySelector('#primary-nav');
-  toggle?.addEventListener('click', () => { const open = toggle.getAttribute('aria-expanded') !== 'true'; toggle.setAttribute('aria-expanded',String(open)); toggle.setAttribute('aria-label',open?'Close menu':'Open menu'); nav.classList.toggle('open',open); });
-  nav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => { toggle?.setAttribute('aria-expanded','false'); toggle?.setAttribute('aria-label','Open menu'); nav.classList.remove('open'); }));
+  const searchPanel = document.querySelector('#site-search');
+  const searchInput = document.querySelector('#product-search');
+
+  // Highlight the current section in the main nav.
+  const path = location.pathname.replace(/\/+$/, '') || '/';
+  const section = path === '/' || path.startsWith('/manufacturing') ? 'manufacturing'
+    : /^\/(shop|product|checkout|index)/.test(path) ? 'shop'
+    : path.startsWith('/story') ? 'story' : '';
+  nav?.querySelector(`[data-nav="${section}"]`)?.setAttribute('aria-current', 'page');
+
+  // Transparent header over the page's hero photo; solid white once scrolled or a panel is open.
+  const hasHero = Boolean(document.querySelector('.page-hero'));
+  document.body.classList.toggle('has-page-hero', hasHero);
+  const syncHeader = () => {
+    if (!header) return;
+    const open = nav?.classList.contains('open') || (searchPanel && !searchPanel.hidden);
+    header.classList.toggle('is-solid', !hasHero || open || window.scrollY > 24);
+  };
+  window.addEventListener('scroll', syncHeader, { passive: true });
+  syncHeader();
+
+  const setMenu = (open) => {
+    if (!toggle || !nav) return;
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    nav.classList.toggle('open', open);
+    document.body.classList.toggle('menu-open', open);
+    syncHeader();
+  };
+  const setSearch = (open) => {
+    if (!searchPanel) return;
+    searchPanel.hidden = !open;
+    document.querySelectorAll('[data-search-toggle]').forEach((b) => b.setAttribute('aria-expanded', String(open)));
+    if (open) { setMenu(false); searchInput?.focus(); }
+    syncHeader();
+  };
+  toggle?.addEventListener('click', () => { const open = toggle.getAttribute('aria-expanded') !== 'true'; if (open) setSearch(false); setMenu(open); });
+  nav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setMenu(false)));
+  document.querySelectorAll('[data-search-toggle]').forEach((b) => b.addEventListener('click', () => setSearch(searchPanel.hidden)));
+  document.addEventListener('keydown', (e) => { if (e.key !== 'Escape') return; setMenu(false); if (searchPanel && !searchPanel.hidden) setSearch(false); });
+  if (searchInput && new URLSearchParams(location.search).get('q')) setSearch(true);
+
+  // Staggered reveal for [data-reveal] lists as they scroll into view.
+  const revealGroups = document.querySelectorAll('[data-reveal]');
+  if (revealGroups.length && 'IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.classList.add('reveal-armed');
+    const io = new IntersectionObserver((entries) => entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('is-in');
+      io.unobserve(entry.target);
+    }), { rootMargin: '0px 0px -8% 0px', threshold: 0.15 });
+    revealGroups.forEach((group) => [...group.children].forEach((child, i) => { child.style.setProperty('--i', i); io.observe(child); }));
+  }
 
   window.Nuburn = { api, money, cart, escapeHtml, productVisual, priceHtml, productSvg, openBag, settingsReady, get settings() { return settings; } };
 })();

@@ -5,7 +5,7 @@
   const slug = new URLSearchParams(location.search).get('slug');
 
   const notFound = () => {
-    root.innerHTML = '<div class="empty-catalog"><span class="empty-star" aria-hidden="true">✳</span><h4>We couldn’t find that piece.</h4><p>It may have sold out or moved. Browse the full collection instead.</p><a href="/shop#catalog">Back to the shop →</a></div>';
+    root.innerHTML = '<div class="empty-catalog"><h4>We Couldn’t Find That Piece.</h4><p>It may have sold out or moved. Browse the full collection instead.</p><a href="/shop#catalog">Back to the Shop →</a></div>';
     document.querySelector('#crumb-category').textContent = 'Not found';
   };
   if (!slug) return notFound();
@@ -14,6 +14,9 @@
     const stockBySize = p.stockBySize || {};
     const stockForSize = (size) => Object.hasOwn(stockBySize, size) ? Number(stockBySize[size]) : p.stock;
     document.querySelector('#crumb-category').textContent = p.category.replace(/-/g, ' ');
+    const heroImg = document.querySelector('#product-hero-img');
+    const categoryArt = { clothing: '/images/category-clothing.jpg', footwear: '/images/category-footwear.jpg' };
+    if (heroImg && categoryArt[p.category]) heroImg.src = categoryArt[p.category];
     const soldOut = p.stock <= 0;
     const thumbs = p.images.length > 1 ? `<div class="gallery-thumbs">${p.images.map((img, i) => `<button type="button" class="${i ? '' : 'active'}" data-src="${escapeHtml(img.url)}" aria-label="Show image ${i + 1}"><img src="${escapeHtml(img.url)}" alt=""></button>`).join('')}</div>` : '';
 
@@ -30,7 +33,7 @@
         ${p.sizes.length ? `<fieldset class="size-picker"><legend>Choose a size</legend>${p.sizes.map((s) => { const available = stockForSize(s); return `<label class="${available <= 0 ? 'unavailable' : ''}"><input type="radio" name="size" value="${escapeHtml(s)}"${p.sizes.length === 1 && available > 0 ? ' checked' : ''}${available <= 0 ? ' disabled' : ''}><span>${escapeHtml(s)}${available <= 0 ? ' · Sold out' : ''}</span></label>`; }).join('')}</fieldset>` : ''}
         <div class="detail-actions">
           <div class="qty qty-large" role="group" aria-label="Quantity"><button type="button" data-step="-1" aria-label="Decrease quantity">−</button><span id="detail-qty">1</span><button type="button" data-step="1" aria-label="Increase quantity">+</button></div>
-          <button class="button button-dark" id="add-to-bag" type="button"${soldOut ? ' disabled' : ''}>${soldOut ? 'Sold out' : 'Add to bag <span aria-hidden="true">↗</span>'}</button>
+          <button class="button button-dark" id="add-to-bag" type="button"${soldOut ? ' disabled' : ''}>${soldOut ? 'Sold Out' : 'Add to Bag'}</button>
         </div>
         <p class="form-error" id="size-error" role="alert" hidden>Please choose a size first.</p>
         ${p.description ? `<div class="detail-description">${escapeHtml(p.description).split(/\n{2,}/).map((para) => `<p>${para.replace(/\n/g, '<br>')}</p>`).join('')}</div>` : ''}

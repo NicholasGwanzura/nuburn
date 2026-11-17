@@ -97,7 +97,7 @@
   }
   $('#enable-alerts').addEventListener('click', async () => {
     const result = await Notification.requestPermission();
-    toast(result === 'granted' ? 'Order alerts are on' : 'Alerts blocked — you can allow them in your browser settings', result !== 'granted');
+    toast(result === 'granted' ? 'Order alerts are on' : 'Alerts blocked. You can allow them in your browser settings.', result !== 'granted');
     renderAlertButton();
   });
 

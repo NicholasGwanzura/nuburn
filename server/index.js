@@ -13,7 +13,7 @@ const SECURE_COOKIES = process.env.NODE_ENV === 'production';
 const ORDER_STATUSES = ['awaiting_payment', 'confirmed', 'fulfilled', 'cancelled'];
 
 if (!process.env.ADMIN_PASSWORD) {
-  console.warn('⚠  ADMIN_PASSWORD is not set — the admin panel will refuse all sign-ins. Add it to .env.');
+  console.warn('⚠  ADMIN_PASSWORD is not set, so the admin panel will refuse all sign-ins. Add it to .env.');
 }
 
 const app = express();
@@ -242,7 +242,7 @@ app.post('/api/orders', (req, res) => {
   const name = String(customer.name || '').trim();
   const phone = String(customer.phone || '').trim();
   if (!name || !phone) throw new HttpError(400, 'Please add your name and phone number.');
-  if (!Array.isArray(items) || !items.length) throw new HttpError(400, 'Your bag is empty.');
+  if (!Array.isArray(items) || !items.length) throw new HttpError(400, 'Your Bag Is Empty.');
   if (items.length > 50) throw new HttpError(400, 'Too many items in one order.');
 
   const lines = items.map((item) => {
@@ -561,36 +561,36 @@ function renderPage(req, res, page, meta, status = 200) {
 const HOME_DESCRIPTION = 'Nuburn Designs brings together expressive clothing and footwear for everyday style and every occasion.';
 
 app.get(['/shop', '/shop/', '/shop/index.html', '/index.html'], (req, res) => renderPage(req, res, 'index', {
-  title: 'Nuburn Designs — Style That Speaks', description: HOME_DESCRIPTION, image: '/images/hero.jpg'
+  title: 'Nuburn Designs | Style That Speaks', description: HOME_DESCRIPTION, image: '/images/hero.jpg'
 }));
 
 app.get(['/story', '/story.html'], (req, res) => renderPage(req, res, 'story', {
-  title: 'Our story — Nuburn Designs',
+  title: 'Our Story | Nuburn Designs',
   description: 'Discover the mission, vision and values behind Nuburn Designs clothing and footwear.',
   image: '/images/story.jpg'
 }));
 
 const MANUFACTURING_SERVICES = {
   'african-attire': {
-    title: 'African Attire', label: '01 / CULTURE', image: '/images/manufacturing-african-attire.jpg',
+    title: 'African Attire', label: 'Manufacturing', image: '/images/manufacturing-african-attire.jpg',
     summary: 'African-inspired clothing that celebrates culture, identity and personal style.',
     description: 'From traditional wear to contemporary African fashion, we create garments for special occasions and everyday expression. Custom tailoring helps shape each design around the person who will wear it.',
     products: ['Traditional and contemporary styles', 'Custom-made designs', 'Special-occasion outfits']
   },
   'corporate-wear': {
-    title: 'Corporate Wear', label: '02 / BUSINESS', image: '/images/manufacturing-corporate.jpg',
+    title: 'Corporate Wear', label: 'Manufacturing', image: '/images/manufacturing-corporate.jpg',
     summary: 'Professional clothing that gives teams a smart, consistent identity.',
     description: 'We make office uniforms and branded workwear for organisations looking for a considered, professional appearance. Options include shirts, trousers, skirts, jackets and blazers.',
     products: ['Office uniforms', 'Branded workwear', 'Shirts, trousers and skirts', 'Jackets and blazers']
   },
   'security-uniforms': {
-    title: 'Security Uniforms', label: '03 / OPERATIONS', image: '/images/manufacturing-security.jpg',
+    title: 'Security Uniforms', label: 'Manufacturing', image: '/images/manufacturing-security.jpg',
     summary: 'Durable, comfortable uniforms for everyday operational demands.',
     description: 'Our security uniform range is designed for a professional appearance and practical daily wear, with options for security companies and their teams.',
     products: ['Security shirts and trousers', 'Jackets and overalls', 'High-visibility workwear', 'Customised uniforms']
   },
   'school-uniforms': {
-    title: 'School Uniforms', label: '04 / LEARNING', image: '/images/manufacturing-school.jpg',
+    title: 'School Uniforms', label: 'Manufacturing', image: '/images/manufacturing-school.jpg',
     summary: 'School clothing designed for comfort, durability and a smart appearance.',
     description: 'We manufacture uniform pieces for the school day, including everyday clothing, knitwear and sportswear for students.',
     products: ['Shirts and blouses', 'Trousers and skirts', 'Dresses and jerseys', 'Sportswear and accessories']
@@ -607,8 +607,8 @@ function renderShell(req, res, meta, content, status = 200) {
 }
 
 function renderNotFound(req, res) {
-  const content = '<section class="not-found section-wrap"><p class="eyebrow">PAGE NOT FOUND</p><h1>Lost the <em>thread.</em></h1><p>The page you were looking for has moved or no longer exists. Try the manufacturing services or browse the store.</p><div class="manufacturing-actions"><a class="button manufacturing-button" href="/">Manufacturing <span aria-hidden="true">↗</span></a><a class="text-link" href="/shop">Shop the collection <span aria-hidden="true">→</span></a></div></section>';
-  renderShell(req, res, { title: 'Page not found — Nuburn Designs', description: HOME_DESCRIPTION }, content, 404);
+  const content = '<section class="page-hero" aria-labelledby="nf-title"><img class="page-hero-img" src="/images/manufacturing-process.jpg" alt=""><div class="page-hero-inner section-wrap"><p class="eyebrow">Page not found</p><h1 id="nf-title">Lost the <em>Thread.</em></h1><p class="page-hero-lead">The page you were looking for has moved or no longer exists. Try the manufacturing services or browse the store.</p><div class="page-hero-actions"><a class="button ft-btn-light" href="/">Manufacturing</a><a class="ft-link-light" href="/shop">Shop the Collection <span aria-hidden="true">→</span></a></div></div></section>';
+  renderShell(req, res, { title: 'Page Not Found | Nuburn Designs', description: HOME_DESCRIPTION }, content, 404);
 }
 
 // The service template is only a shell for the routes below; don't serve it raw.
@@ -617,24 +617,24 @@ app.get(['/manufacturing-service', '/manufacturing-service.html'], (req, res) =>
 app.get('/manufacturing/:serviceSlug', (req, res) => {
   const service = MANUFACTURING_SERVICES[req.params.serviceSlug];
   if (!service) return renderNotFound(req, res);
-  const content = `<section class="manufacturing-service-hero section-wrap"><nav class="manufacturing-breadcrumb" aria-label="Breadcrumb"><a href="/">Manufacturing</a><span aria-hidden="true">/</span><span>${escapeAttr(service.title)}</span></nav><div class="manufacturing-service-detail"><div><p class="eyebrow">${escapeAttr(service.label)}</p><h1>${escapeAttr(service.title)}.</h1><p class="manufacturing-lead">${escapeAttr(service.summary)}</p><p>${escapeAttr(service.description)}</p><a class="button manufacturing-button" href="/#manufacturing-enquiry">Discuss an order <span aria-hidden="true">↗</span></a></div><figure class="manufacturing-detail-photo"><img src="${escapeAttr(service.image)}" alt="Illustrative ${escapeAttr(service.title.toLowerCase())} style imagery"><figcaption>Illustrative representative imagery</figcaption></figure></div></section><section class="manufacturing-detail-products section-wrap"><div><p class="eyebrow">MADE FOR YOUR NEEDS</p><h2>Explore the <em>range.</em></h2><p>Discuss sizes, quantities and a tailored solution with our team.</p></div><ul>${service.products.map((item) => `<li>${escapeAttr(item)}</li>`).join('')}</ul></section><div class="story-page-cta section-wrap"><p>See all manufacturing services.</p><a class="button manufacturing-button" href="/">Back to Manufacturing <span aria-hidden="true">↗</span></a></div>`;
-  renderShell(req, res, { title: `${service.title} — Nuburn Designs`, description: service.summary, image: service.image }, content);
+  const content = `<section class="page-hero page-hero--tall" aria-labelledby="service-title"><img class="page-hero-img" src="${escapeAttr(service.image)}" alt="" fetchpriority="high"><div class="page-hero-inner section-wrap"><nav class="page-hero-crumbs" aria-label="Breadcrumb"><a href="/">Manufacturing</a><span aria-hidden="true">/</span><span>${escapeAttr(service.title)}</span></nav><p class="eyebrow">${escapeAttr(service.label)}</p><h1 id="service-title">${escapeAttr(service.title)}.</h1><p class="page-hero-lead">${escapeAttr(service.summary)}</p><div class="page-hero-actions"><a class="button ft-btn-light" href="/#manufacturing-enquiry">Discuss an Order</a></div><p class="page-hero-note">Illustrative imagery</p></div></section><section class="manufacturing-service-intro section-wrap"><p class="eyebrow">About this service</p><p>${escapeAttr(service.description)}</p></section><section class="manufacturing-detail-products section-wrap"><div><p class="eyebrow">MADE FOR YOUR NEEDS</p><h2>Explore the <em>Range.</em></h2><p>Discuss sizes, quantities and a tailored solution with our team.</p></div><ul>${service.products.map((item) => `<li>${escapeAttr(item)}</li>`).join('')}</ul></section><div class="story-page-cta section-wrap"><p>See All Manufacturing Services.</p><a class="button manufacturing-button" href="/">Back to Manufacturing</a></div>`;
+  renderShell(req, res, { title: `${service.title} | Nuburn Designs`, description: service.summary, image: service.image }, content);
 });
 
 app.get(['/', '/manufacturing', '/manufacturing.html'], (req, res) => renderPage(req, res, 'manufacturing', {
-  title: 'Manufacturing division — Nuburn Designs',
+  title: 'Manufacturing Division | Nuburn Designs',
   description: 'Explore Nuburn Designs garment manufacturing for African attire, corporate wear, security uniforms and school uniforms.'
 }));
 
 app.get(['/product', '/product.html'], (req, res) => {
   const row = db.prepare('SELECT * FROM products WHERE slug = ? AND published = 1').get(String(req.query.slug || ''));
-  if (!row) return renderPage(req, res, 'product', { title: 'Not found — Nuburn Designs', description: HOME_DESCRIPTION }, 404);
+  if (!row) return renderPage(req, res, 'product', { title: 'Not Found | Nuburn Designs', description: HOME_DESCRIPTION }, 404);
   const product = serializeProduct(row);
   const { currency } = getSettings();
   const price = formatMoney(product.priceCents, currency);
   const summary = product.description.replace(/\s+/g, ' ').trim().slice(0, 140);
   renderPage(req, res, 'product', {
-    title: `${product.name} — ${price} | Nuburn Designs`,
+    title: `${product.name} · ${price} | Nuburn Designs`,
     description: `${price} · ${product.availability}${summary ? ` · ${summary}` : ''}`,
     image: product.images[0]?.url || '/images/hero.jpg',
     type: 'product',
@@ -643,7 +643,7 @@ app.get(['/product', '/product.html'], (req, res) => {
 });
 
 app.get(['/checkout', '/checkout.html'], (req, res) => renderPage(req, res, 'checkout', {
-  title: 'Your bag — Nuburn Designs', description: HOME_DESCRIPTION
+  title: 'Your Bag | Nuburn Designs', description: HOME_DESCRIPTION
 }));
 
 // ---------- static files ----------
