@@ -60,10 +60,11 @@ Money is stored as **integer cents** (`price_cents`). The API returns `priceCent
 
 - **Background is white everywhere** (`--bg:#fff`). This is an explicit owner requirement. Colour comes from blue accent blocks, image tiles and photos.
 - **Logo:** `public/images/nuburn-logo.svg` is the supplied Nuburn Designs artwork. Use it in the shared header, footer and admin. Its blue (`#355fac`) is the site accent; keep the original paths intact.
-- **Fonts:** `DM Sans` (UI/body, `--sans`) and `DM Serif Display` (`--serif`), loaded from Google Fonts in each page `<head>`. Headline pattern: sans 500 with tight tracking, plus an *italic serif accent word* in blue via `<em>`, e.g. `Style that <em>speaks.</em>`
+- **Fonts:** `Manrope` (400–800) for UI, body and headlines (`--sans`; `--serif` is aliased to it), loaded from Google Fonts in each page `<head>`. Headline pattern: sans 500 with tight tracking, plus an accent word in blue via `<em>` (upright, weight 600), e.g. `Style that <em>speaks.</em>`
 - **Colours:** use the CSS variables at the top of `public/styles.css` (`--ink`, `--muted`, `--accent`, `--accent-dark`, `--accent-soft`, `--surface`, `--line`…). Don't hard-code new colours.
 - **Readability floor:** no text below 11px; body copy 15–18px.
 - **Shapes:** restrained 6px buttons and filters, 10–12px image tiles and content cards, thin `--line` dividers.
+- **Admin link:** not in the public header; a quiet "Owner login" link sits in the footer bottom row.
 - **Breakpoints:** 1080 / 900 / 720px. Check mobile (≈390px) for every change.
 - Admin uses its own `public/admin/admin.css` (same fonts and white theme).
 

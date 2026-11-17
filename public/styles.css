@@ -363,7 +363,7 @@ a.product-card:hover .product-illustration{transform:translateY(-4px);transition
 .checkout-form label[hidden]{display:none}
 .checkout-form small{font-weight:400;color:var(--muted)}
 .checkout-form input:not([type=radio]),.checkout-form textarea{border:1px solid var(--line-strong);background:#fff;padding:13px 14px;font-size:16px;font-weight:400;border-radius:6px;resize:vertical;transition:border-color .2s}
-.checkout-form input:focus,.checkout-form textarea:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px rgba(184,83,47,.15)}
+.checkout-form input:focus,.checkout-form textarea:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px var(--accent-soft)}
 .choice-row{border:0;padding:0;margin:0;display:flex;gap:22px;flex-wrap:wrap}
 .choice-row legend{font-size:14px;font-weight:500;margin-bottom:10px}
 .choice-row label{flex-direction:row;align-items:center;font-weight:400;font-size:15px}
@@ -714,3 +714,52 @@ button.text-link{background:none;border:0;border-bottom:1px solid currentColor;b
   .office-card{padding:20px}
 }
 @media(max-width:390px){.manufacturing-process-list{grid-template-columns:1fr}}
+
+/* ---------- manufacturing service detail ---------- */
+.manufacturing-service-hero{padding-top:36px;padding-bottom:88px}
+.manufacturing-breadcrumb{display:flex;align-items:center;gap:10px;margin-bottom:44px;color:var(--muted);font-size:13px;font-weight:600}
+.manufacturing-breadcrumb a{color:var(--ink-soft);transition:color .2s}
+.manufacturing-breadcrumb a:hover{color:var(--accent)}
+.manufacturing-breadcrumb span:last-child{color:var(--ink)}
+.manufacturing-service-detail{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);align-items:center;gap:6%}
+.manufacturing-service-detail h1{font-size:clamp(48px,5.6vw,80px);font-weight:500;line-height:1.02;letter-spacing:-.05em;margin:0}
+.manufacturing-service-detail .manufacturing-lead{max-width:520px}
+.manufacturing-service-detail p:not(.eyebrow):not(.manufacturing-lead){max-width:520px;margin:0 0 32px;color:var(--ink-soft);font-size:16px;line-height:1.75}
+.manufacturing-detail-photo{position:relative;margin:0;overflow:hidden;aspect-ratio:4/5;border-radius:12px;background:var(--manufacturing-cream)}
+.manufacturing-detail-photo img{width:100%;height:100%;object-fit:cover}
+.manufacturing-detail-photo figcaption{position:absolute;right:12px;bottom:12px;padding:6px 9px;border-radius:4px;background:rgba(23,35,58,.72);color:#fff;font-size:11px;letter-spacing:.04em}
+.manufacturing-detail-products{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:6%;padding-top:72px;padding-bottom:96px;border-top:1px solid var(--line)}
+.manufacturing-detail-products h2{font-size:clamp(38px,4.4vw,58px);letter-spacing:-.045em;line-height:1.05}
+.manufacturing-detail-products div>p:last-child{max-width:420px;margin:18px 0 0;color:var(--ink-soft);font-size:16px;line-height:1.7}
+.manufacturing-detail-products ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;list-style:none;margin:0;padding:0;align-content:start}
+.manufacturing-detail-products li{display:flex;align-items:flex-start;gap:12px;padding:20px 22px;border:1px solid var(--line);border-radius:10px;font-size:16px;font-weight:600;line-height:1.4}
+.manufacturing-detail-products li:before{content:"";flex:none;width:8px;height:8px;margin-top:7px;border-radius:50%;background:var(--accent)}
+.manufacturing-service-page .story-page-cta{margin-bottom:0}
+.not-found{padding-top:96px;padding-bottom:120px}
+.not-found h1{font-size:clamp(48px,6vw,84px);font-weight:500;letter-spacing:-.05em;line-height:1;margin:0 0 20px}
+.not-found p:not(.eyebrow){max-width:520px;margin:0 0 32px;color:var(--ink-soft);font-size:17px;line-height:1.7}
+@media(max-width:900px){
+  .manufacturing-service-detail,.manufacturing-detail-products{grid-template-columns:1fr;gap:40px}
+  .manufacturing-detail-photo{aspect-ratio:4/3}
+}
+@media(max-width:720px){
+  .manufacturing-service-hero{padding-top:24px;padding-bottom:60px}
+  .manufacturing-breadcrumb{margin-bottom:28px}
+  .manufacturing-service-detail h1{font-size:clamp(44px,12vw,60px)}
+  .manufacturing-service-detail .button{width:100%}
+  .manufacturing-detail-products{gap:28px;padding-top:52px;padding-bottom:64px}
+  .manufacturing-detail-products ul{grid-template-columns:1fr;gap:10px}
+  .manufacturing-detail-products li{padding:16px 18px;font-size:15px}
+  .not-found{padding-top:56px;padding-bottom:80px}
+}
+
+/* ---------- polish pass ---------- */
+.footer-cols>*{min-width:0}
+.footer-admin{color:var(--muted);transition:color .2s}
+.footer-admin:hover{color:var(--accent)}
+@media(max-width:720px){
+  .footer-cols a{width:auto}
+  .product-tag{font-size:11px}
+  .values{gap:28px}
+  .values div+div{padding-top:24px;border-top:1px solid var(--line)}
+}

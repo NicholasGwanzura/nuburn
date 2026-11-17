@@ -597,16 +597,28 @@ const MANUFACTURING_SERVICES = {
   }
 };
 
-app.get('/manufacturing/:serviceSlug', (req, res) => {
-  const service = MANUFACTURING_SERVICES[req.params.serviceSlug];
-  if (!service) return res.status(404).type('text').send('Page not found.');
-  const content = `<section class="manufacturing-service-hero section-wrap"><nav class="manufacturing-breadcrumb" aria-label="Breadcrumb"><a href="/">Manufacturing</a><span aria-hidden="true">/</span><span>${escapeAttr(service.title)}</span></nav><div class="manufacturing-service-detail"><div><p class="eyebrow">${escapeAttr(service.label)}</p><h1>${escapeAttr(service.title)}.</h1><p class="manufacturing-lead">${escapeAttr(service.summary)}</p><p>${escapeAttr(service.description)}</p><a class="button manufacturing-button" href="/#manufacturing-enquiry">Discuss an order <span aria-hidden="true">↗</span></a></div><figure class="manufacturing-detail-photo"><img src="${escapeAttr(service.image)}" alt="Illustrative ${escapeAttr(service.title.toLowerCase())} style imagery"><figcaption>Illustrative representative imagery</figcaption></figure></div></section><section class="manufacturing-detail-products section-wrap"><div><p class="eyebrow">MADE FOR YOUR NEEDS</p><h2>Explore the <em>range.</em></h2><p>Discuss sizes, quantities and a tailored solution with our team.</p></div><ul>${service.products.map((item) => `<li>${escapeAttr(item)}</li>`).join('')}</ul></section><div class="story-page-cta section-wrap"><p>See all manufacturing services.</p><a class="button manufacturing-button" href="/">Back to Manufacturing <span aria-hidden="true">↗</span></a></div>`;
+function renderShell(req, res, meta, content, status = 200) {
   const html = readText(path.join(PUBLIC_DIR, 'manufacturing-service.html'))
-    .replace('<!-- @meta -->', metaTags(req, { title: `${service.title} — Nuburn Designs`, description: service.summary, image: service.image }))
+    .replace('<!-- @meta -->', metaTags(req, meta))
     .replace('<!-- @header -->', readText(path.join(PARTIALS_DIR, 'header.html')))
     .replace('<!-- @footer -->', readText(path.join(PARTIALS_DIR, 'footer.html')))
     .replace('<!-- @service -->', content);
-  res.type('html').set('Cache-Control', 'no-cache').send(html);
+  res.status(status).type('html').set('Cache-Control', 'no-cache').send(html);
+}
+
+function renderNotFound(req, res) {
+  const content = '<section class="not-found section-wrap"><p class="eyebrow">PAGE NOT FOUND</p><h1>Lost the <em>thread.</em></h1><p>The page you were looking for has moved or no longer exists. Try the manufacturing services or browse the store.</p><div class="manufacturing-actions"><a class="button manufacturing-button" href="/">Manufacturing <span aria-hidden="true">↗</span></a><a class="text-link" href="/shop">Shop the collection <span aria-hidden="true">→</span></a></div></section>';
+  renderShell(req, res, { title: 'Page not found — Nuburn Designs', description: HOME_DESCRIPTION }, content, 404);
+}
+
+// The service template is only a shell for the routes below; don't serve it raw.
+app.get(['/manufacturing-service', '/manufacturing-service.html'], (req, res) => res.redirect(301, '/'));
+
+app.get('/manufacturing/:serviceSlug', (req, res) => {
+  const service = MANUFACTURING_SERVICES[req.params.serviceSlug];
+  if (!service) return renderNotFound(req, res);
+  const content = `<section class="manufacturing-service-hero section-wrap"><nav class="manufacturing-breadcrumb" aria-label="Breadcrumb"><a href="/">Manufacturing</a><span aria-hidden="true">/</span><span>${escapeAttr(service.title)}</span></nav><div class="manufacturing-service-detail"><div><p class="eyebrow">${escapeAttr(service.label)}</p><h1>${escapeAttr(service.title)}.</h1><p class="manufacturing-lead">${escapeAttr(service.summary)}</p><p>${escapeAttr(service.description)}</p><a class="button manufacturing-button" href="/#manufacturing-enquiry">Discuss an order <span aria-hidden="true">↗</span></a></div><figure class="manufacturing-detail-photo"><img src="${escapeAttr(service.image)}" alt="Illustrative ${escapeAttr(service.title.toLowerCase())} style imagery"><figcaption>Illustrative representative imagery</figcaption></figure></div></section><section class="manufacturing-detail-products section-wrap"><div><p class="eyebrow">MADE FOR YOUR NEEDS</p><h2>Explore the <em>range.</em></h2><p>Discuss sizes, quantities and a tailored solution with our team.</p></div><ul>${service.products.map((item) => `<li>${escapeAttr(item)}</li>`).join('')}</ul></section><div class="story-page-cta section-wrap"><p>See all manufacturing services.</p><a class="button manufacturing-button" href="/">Back to Manufacturing <span aria-hidden="true">↗</span></a></div>`;
+  renderShell(req, res, { title: `${service.title} — Nuburn Designs`, description: service.summary, image: service.image }, content);
 });
 
 app.get(['/', '/manufacturing', '/manufacturing.html'], (req, res) => renderPage(req, res, 'manufacturing', {
@@ -638,6 +650,11 @@ app.get(['/checkout', '/checkout.html'], (req, res) => renderPage(req, res, 'che
 
 app.use('/uploads', express.static(UPLOAD_DIR, { maxAge: '30d', immutable: true }));
 app.use(express.static(path.resolve('public'), { extensions: ['html'] }));
+
+app.use((req, res, next) => {
+  if (req.method !== 'GET' || req.path.startsWith('/api') || !req.accepts('html')) return next();
+  renderNotFound(req, res);
+});
 
 app.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) err = new HttpError(400, err.code === 'LIMIT_FILE_SIZE' ? 'Each image must be under 8 MB.' : err.message);

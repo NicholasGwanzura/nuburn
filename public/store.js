@@ -114,7 +114,7 @@
       if (!offices.length) { container.hidden = true; return; }
       const heading = document.createElement('div');
       heading.className = 'office-directory-heading';
-      heading.innerHTML = '<p class="eyebrow">FIND NUBURN</p><h2>Our Offices</h2>';
+      heading.innerHTML = '<p class="eyebrow">FIND NUBURN</p><h2>Our <em>offices.</em></h2>';
       const grid = document.createElement('div');
       grid.className = 'office-directory-grid';
       for (const office of offices) {
