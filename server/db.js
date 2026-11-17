@@ -79,14 +79,14 @@ if (!productColumns.has('variant_stock')) db.exec("ALTER TABLE products ADD COLU
 
 export const DEFAULT_SETTINGS = {
   currency: 'USD',
-  phone: '0788 277 001',
+  phone: '0784779835',
   whatsapp: '',
   email: '',
-  address: 'Room 4, CA House, 91 Herbert Chitepo Street, Mutare',
+  address: 'Meikles Market, Shop Number 2, Herbert Chitepo Street, Mutare',
   offices: JSON.stringify([
-    { city: 'Bulawayo Office', address: 'CIPF Building, Jason Moyo & 9th Avenue\n2nd Floor, Office 208', phones: [{ label: '', number: '+263 78 930 1038' }] },
-    { city: 'Harare Office', address: '10 Fereday Drive, Eastlea\nHarare, Zimbabwe', phones: [{ label: '', number: '+263 78 652 0177' }, { label: '', number: '+263 78 652 0175' }] },
-    { city: 'Mutare Office', address: 'Room 4, CA House\n91 Herbert Chitepo Street, Mutare', phones: [{ label: 'Sales & Admin', number: '0788 277 001' }] }
+    { city: 'Bulawayo Office', address: 'CIPF Building, Jason Moyo & 9th Avenue\n2nd Floor, Office 208', phones: [{ label: 'Branch', number: '+263 78 930 1038' }, { label: 'Harare & Bulawayo', number: '0774364397' }, { label: 'All Branches', number: '0784779835' }] },
+    { city: 'Harare Office', address: '10 Fereday Drive, Eastlea\nHarare, Zimbabwe', phones: [{ label: 'Branch', number: '+263 78 652 0177' }, { label: 'Branch', number: '+263 78 652 0175' }, { label: 'Harare & Bulawayo', number: '0774364397' }, { label: 'All Branches', number: '0784779835' }] },
+    { city: 'Mutare Office', address: 'Meikles Market, Shop Number 2\nHerbert Chitepo Street, Mutare', phones: [{ label: 'Branch', number: '0780193610' }, { label: 'All Branches', number: '0784779835' }] }
   ]),
   instagram: '',
   facebook: '',
@@ -96,7 +96,8 @@ export const DEFAULT_SETTINGS = {
 export function getSettings() {
   const rows = db.prepare('SELECT key, value FROM settings').all();
   const settings = { ...DEFAULT_SETTINGS, ...Object.fromEntries(rows.map((r) => [r.key, r.value])) };
-  if (settings.phone === '0784779835') settings.phone = DEFAULT_SETTINGS.phone;
+  if (settings.phone === '0788 277 001') settings.phone = DEFAULT_SETTINGS.phone;
+  if (settings.address === 'Room 4, CA House, 91 Herbert Chitepo Street, Mutare') settings.address = DEFAULT_SETTINGS.address;
   return settings;
 }
 
