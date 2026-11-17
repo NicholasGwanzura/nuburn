@@ -568,6 +568,11 @@ app.get(['/story', '/story.html'], (req, res) => renderPage(req, res, 'story', {
   image: '/images/story.jpg'
 }));
 
+app.get(['/manufacturing', '/manufacturing.html'], (req, res) => renderPage(req, res, 'manufacturing', {
+  title: 'Manufacturing division — Nuburn Designs',
+  description: 'Explore Nuburn Designs garment manufacturing for African attire, corporate wear, security uniforms and school uniforms.'
+}));
+
 app.get(['/product', '/product.html'], (req, res) => {
   const row = db.prepare('SELECT * FROM products WHERE slug = ? AND published = 1').get(String(req.query.slug || ''));
   if (!row) return renderPage(req, res, 'product', { title: 'Not found — Nuburn Designs', description: HOME_DESCRIPTION }, 404);

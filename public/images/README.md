@@ -39,3 +39,17 @@ Text sits on top of the category tiles (top-left label, bottom-left title) and o
 
 - Save as **JPG** (or keep the name and use `.jpg` even when it's a WebP export). Aim for **under 400 KB** each; compress with Squoosh or TinyPNG.
 - Want a different filename or format? Change the `src="/images/…"` in `public/index.html` or `public/story.html`.
+
+## Manufacturing division photography
+
+The `/manufacturing` page has optional photo slots. It renders a neutral editorial illustration until approved photography is added. Save photos with these exact names in this directory:
+
+| File | Subject |
+| --- | --- |
+| `manufacturing-hero.jpg` | A real Nuburn garment maker at work in the workshop |
+| `manufacturing-african-attire.jpg` | Finished African attire |
+| `manufacturing-corporate.jpg` | Finished corporate wear |
+| `manufacturing-security.jpg` | Finished security uniform |
+| `manufacturing-school.jpg` | Finished school uniform |
+
+Use real Nuburn staff, facilities and finished garments with permission. The concept pictures in the manufacturing brief are layout references and should not be published as evidence of Nuburn's people or premises. Crop the hero to roughly 4:3 and the category photos to a wide rectangle. Keep files optimised for the web.

@@ -34,6 +34,7 @@ server/
 public/           storefront (served as-is)
   index.html      home: hero, categories, catalog, ordering, contact
   story.html      Our story: brand background, mission, vision and values
+  manufacturing.html  Manufacturing division: services, process and enquiry links
   product.html    product detail (?slug=)
   checkout.html   bag review + order request form
   favicon.svg

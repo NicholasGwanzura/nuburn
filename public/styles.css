@@ -10,6 +10,10 @@
   --accent-deep:#294d8e;
   --accent-dark:#1e3b72;
   --accent-soft:#dbe6f6;
+  --manufacturing-ink:#24231f;
+  --manufacturing-gold:#a8782d;
+  --manufacturing-gold-soft:#d7bd8a;
+  --manufacturing-cream:#f6f2e9;
   --line:rgba(23,35,58,.14);
   --line-strong:rgba(23,35,58,.26);
   --sans:'DM Sans',system-ui,-apple-system,'Segoe UI',Arial,sans-serif;
@@ -570,3 +574,119 @@ button.text-link{background:none;border:0;border-bottom:1px solid currentColor;b
   .hero-actions{gap:18px}
   .hero-actions .button{flex:1 1 100%;justify-content:space-between}
 }
+
+/* ---------- manufacturing division ---------- */
+.manufacturing-promo{display:grid;grid-template-columns:1fr 1fr;align-items:end;gap:64px;padding:56px 0 72px;border-top:1px solid var(--line)}
+.manufacturing-promo .eyebrow{color:var(--manufacturing-gold)}
+.manufacturing-promo h2{font-size:clamp(36px,4vw,54px);letter-spacing:-.04em;line-height:1.05}
+.manufacturing-promo h2 em{color:var(--manufacturing-gold)}
+.manufacturing-promo p:not(.eyebrow){max-width:470px;margin:0 0 24px;color:var(--ink-soft);font-size:17px;line-height:1.65}
+.manufacturing-page main{color:var(--manufacturing-ink)}
+.manufacturing-page .eyebrow{color:var(--manufacturing-gold);font-weight:700}
+.manufacturing-page h1 em,.manufacturing-page h2 em{color:var(--manufacturing-gold)}
+.manufacturing-hero{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:5%;padding-top:72px;padding-bottom:100px}
+.manufacturing-hero-copy h1{max-width:680px;font-size:clamp(48px,5.8vw,82px);line-height:1.02;letter-spacing:-.05em}
+.manufacturing-lead{margin:28px 0 12px!important;color:var(--manufacturing-ink)!important;font-size:20px!important;font-weight:600;line-height:1.4!important}
+.manufacturing-hero-copy>p:not(.eyebrow){max-width:560px;margin:0;color:var(--ink-soft);font-size:16px;line-height:1.75}
+.manufacturing-actions{display:flex;align-items:center;flex-wrap:wrap;gap:26px;margin-top:34px}
+.manufacturing-button{background:var(--manufacturing-ink);color:#fff;box-shadow:none}
+.manufacturing-button:hover{background:var(--manufacturing-gold)}
+.manufacturing-page .text-link:hover{color:var(--manufacturing-gold)}
+.manufacturing-hero-art{position:relative;min-height:570px;overflow:hidden;border-radius:12px;background:var(--manufacturing-cream);border:1px solid rgba(36,35,31,.1)}
+.manufacturing-hero-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2}
+.manufacturing-hero-art:has(img):after{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,rgba(0,0,0,.35),transparent 32%,transparent 68%,rgba(0,0,0,.42))}
+.manufacturing-art-top,.manufacturing-art-bottom{position:absolute;z-index:3;left:32px;right:32px;display:flex;justify-content:space-between;gap:18px;color:var(--manufacturing-ink);font-size:11px;font-weight:700;letter-spacing:.16em}
+.manufacturing-art-top{top:28px}.manufacturing-art-bottom{bottom:26px;justify-content:flex-start;flex-wrap:wrap}
+.manufacturing-art-bottom span{color:var(--manufacturing-gold)}
+.manufacturing-hero-art:has(img) .manufacturing-art-top,.manufacturing-hero-art:has(img) .manufacturing-art-bottom{color:#fff}
+.manufacturing-stitch{position:absolute;width:60%;aspect-ratio:1;top:16%;left:20%;border:1px dashed var(--manufacturing-gold-soft);border-radius:50%;box-shadow:0 0 0 60px rgba(215,189,138,.08),0 0 0 120px rgba(215,189,138,.07)}
+.manufacturing-stitch:after{content:"";position:absolute;inset:17%;border:1px solid var(--manufacturing-gold-soft);border-radius:50%}
+.manufacturing-art-word{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);color:var(--manufacturing-gold);font-family:var(--serif);font-size:clamp(110px,15vw,230px);line-height:1;text-align:center;letter-spacing:-.08em;font-style:italic;opacity:.78}
+.manufacturing-hero-art:has(img) .manufacturing-stitch,.manufacturing-hero-art:has(img) .manufacturing-art-word{display:none}
+.manufacturing-services{padding-top:96px;padding-bottom:120px;border-top:1px solid var(--line)}
+.manufacturing-section-head{max-width:800px;margin-bottom:46px}
+.manufacturing-section-head h2,.manufacturing-process h2,.manufacturing-commitment h2,.manufacturing-enquiry h2{font-size:clamp(42px,5vw,68px);letter-spacing:-.045em;line-height:1.06}
+.manufacturing-section-head>p:last-child{max-width:550px;margin:18px 0 0;color:var(--ink-soft);font-size:17px;line-height:1.65}
+.manufacturing-service-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.manufacturing-service-card{overflow:hidden;border:1px solid var(--line);border-radius:12px;background:#fff;transition:transform .25s,box-shadow .25s}
+.manufacturing-service-card:hover{transform:translateY(-3px);box-shadow:0 14px 35px rgba(36,35,31,.09)}
+.manufacturing-service-art{position:relative;display:grid;place-items:center;height:250px;overflow:hidden;background:var(--manufacturing-cream)}
+.manufacturing-service-art:before{content:"";position:absolute;width:280px;height:280px;border:1px solid var(--manufacturing-gold-soft);border-radius:50%;transform:translate(30%,-10%)}
+.manufacturing-service-art:after{content:"";position:absolute;inset:16px;border:1px solid rgba(168,120,45,.22);border-radius:4px}
+.manufacturing-service-art>span{font-family:var(--serif);font-size:140px;line-height:1;color:var(--manufacturing-gold-soft);font-style:italic;letter-spacing:-.08em}
+.manufacturing-art-corporate{background:#f1eee8}.manufacturing-art-security{background:#eae8e2}.manufacturing-art-school{background:#f5f1e7}
+.manufacturing-service-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2}
+.manufacturing-service-art:has(img)>span,.manufacturing-service-art:has(img):before,.manufacturing-service-art:has(img):after{display:none}
+.manufacturing-service-copy{padding:26px 28px 30px}
+.manufacturing-card-index{color:var(--manufacturing-gold);font-size:11px;font-weight:700;letter-spacing:.16em}
+.manufacturing-service-copy h3{margin:9px 0 10px;font-size:31px;letter-spacing:-.03em;line-height:1.15}
+.manufacturing-service-copy p{margin:0;color:var(--ink-soft);font-size:15px;line-height:1.65}
+.manufacturing-service-copy ul{display:flex;flex-wrap:wrap;gap:6px 18px;list-style:none;margin:22px 0 0;padding:16px 0 0;border-top:1px solid var(--line)}
+.manufacturing-service-copy li{font-size:12px;color:var(--manufacturing-ink)}
+.manufacturing-service-copy li:before{content:"·";margin-right:8px;color:var(--manufacturing-gold);font-weight:700}
+.manufacturing-process{padding:96px 0 110px;background:var(--manufacturing-cream)}
+.manufacturing-process-intro{display:grid;grid-template-columns:1fr .7fr;align-items:end;gap:60px;margin-bottom:48px}
+.manufacturing-process-intro>p{max-width:430px;margin:0 0 4px;color:var(--ink-soft);font-size:16px;line-height:1.7}
+.manufacturing-process-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;list-style:none;margin:0;padding:0;border-top:1px solid rgba(36,35,31,.18)}
+.manufacturing-process-list li{padding:26px 20px 0 0}
+.manufacturing-process-list li+li{border-left:1px solid rgba(36,35,31,.18);padding-left:20px}
+.manufacturing-process-list span{color:var(--manufacturing-gold);font-size:12px;font-weight:700;letter-spacing:.12em}
+.manufacturing-process-list h3{margin:22px 0 8px;font-size:20px;font-weight:600;letter-spacing:-.02em}
+.manufacturing-process-list p{margin:0;color:var(--ink-soft);font-size:14px;line-height:1.55}
+.manufacturing-commitment{padding-top:112px;padding-bottom:112px;text-align:center}
+.manufacturing-commitment h2{max-width:700px;margin:0 auto}
+.manufacturing-commitment>p:not(.eyebrow){max-width:700px;margin:24px auto 0;color:var(--ink-soft);font-size:17px;line-height:1.75}
+.manufacturing-signoff{display:block;margin-top:30px;color:var(--manufacturing-gold);font-family:var(--serif);font-size:25px;font-style:italic}
+.manufacturing-enquiry{display:flex;justify-content:space-between;align-items:end;gap:48px;margin-bottom:100px;padding:54px 56px;background:var(--manufacturing-ink);color:#fff;border-radius:12px}
+.manufacturing-enquiry .eyebrow{color:var(--manufacturing-gold-soft)}
+.manufacturing-enquiry h2{max-width:650px}
+.manufacturing-enquiry h2 em{color:var(--manufacturing-gold-soft)}
+.manufacturing-enquiry p:not(.eyebrow){max-width:560px;color:rgba(255,255,255,.78);font-size:16px;line-height:1.7}
+.manufacturing-enquiry-actions{display:flex;flex-direction:column;align-items:stretch;gap:14px;min-width:250px}
+.manufacturing-enquiry .manufacturing-button{background:var(--manufacturing-gold-soft);color:var(--manufacturing-ink)}
+.manufacturing-enquiry .manufacturing-button:hover{background:#fff}
+.manufacturing-enquiry-actions>a:not(.button){align-self:flex-start;border-bottom:1px solid rgba(255,255,255,.7);font-size:14px;font-weight:600}
+
+@media(max-width:1080px){
+  .manufacturing-hero{gap:32px}
+  .manufacturing-hero-art{min-height:490px}
+  .manufacturing-process-list{grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+  .manufacturing-process-list li,.manufacturing-process-list li+li{border-left:0;padding:20px 12px 0 0}
+}
+@media(max-width:900px){
+  .manufacturing-hero{grid-template-columns:1fr;padding-top:48px}
+  .manufacturing-hero-art{min-height:0;aspect-ratio:4/3}
+  .manufacturing-process-intro{grid-template-columns:1fr;gap:20px}
+  .manufacturing-enquiry{align-items:flex-start;flex-direction:column}
+}
+@media(max-width:720px){
+  .manufacturing-promo{grid-template-columns:1fr;gap:16px;padding:42px 0 60px}
+  .manufacturing-promo p:not(.eyebrow){font-size:15px}
+  .manufacturing-hero{gap:32px;padding-top:44px;padding-bottom:68px}
+  .manufacturing-hero-copy h1{font-size:clamp(44px,12vw,62px)}
+  .manufacturing-lead{font-size:18px!important}
+  .manufacturing-hero-copy>p:not(.eyebrow){font-size:15px}
+  .manufacturing-actions{gap:18px}
+  .manufacturing-actions .button{width:100%}
+  .manufacturing-hero-art{aspect-ratio:4/3;border-radius:10px}
+  .manufacturing-art-top,.manufacturing-art-bottom{left:18px;right:18px;font-size:11px}
+  .manufacturing-art-word{font-size:30vw}
+  .manufacturing-services{padding-top:68px;padding-bottom:72px}
+  .manufacturing-section-head{margin-bottom:28px}
+  .manufacturing-section-head h2,.manufacturing-process h2,.manufacturing-commitment h2,.manufacturing-enquiry h2{font-size:clamp(38px,10vw,52px)}
+  .manufacturing-section-head>p:last-child{font-size:15px}
+  .manufacturing-service-grid{grid-template-columns:1fr;gap:14px}
+  .manufacturing-service-art{height:210px}
+  .manufacturing-service-copy{padding:22px}
+  .manufacturing-service-copy h3{font-size:27px}
+  .manufacturing-process{padding:68px 0 76px}
+  .manufacturing-process-list{grid-template-columns:1fr 1fr;gap:18px}
+  .manufacturing-process-list li{padding-top:10px}
+  .manufacturing-process-list h3{margin-top:12px}
+  .manufacturing-commitment{padding-top:76px;padding-bottom:76px}
+  .manufacturing-commitment>p:not(.eyebrow){font-size:15px}
+  .manufacturing-signoff{font-size:21px}
+  .manufacturing-enquiry{gap:24px;margin-bottom:70px;padding:34px 24px}
+  .manufacturing-enquiry-actions{width:100%;min-width:0}
+}
+@media(max-width:390px){.manufacturing-process-list{grid-template-columns:1fr}}
