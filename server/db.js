@@ -79,10 +79,15 @@ if (!productColumns.has('variant_stock')) db.exec("ALTER TABLE products ADD COLU
 
 export const DEFAULT_SETTINGS = {
   currency: 'USD',
-  phone: '',
+  phone: '0788 277 001',
   whatsapp: '',
   email: '',
-  address: '',
+  address: 'Room 4, CA House, 91 Herbert Chitepo Street, Mutare',
+  offices: JSON.stringify([
+    { city: 'Bulawayo Office', address: 'CIPF Building, Jason Moyo & 9th Avenue\n2nd Floor, Office 208', phones: [{ label: '', number: '+263 78 930 1038' }] },
+    { city: 'Harare Office', address: '10 Fereday Drive, Eastlea\nHarare, Zimbabwe', phones: [{ label: '', number: '+263 78 652 0177' }, { label: '', number: '+263 78 652 0175' }] },
+    { city: 'Mutare Office', address: 'Room 4, CA House\n91 Herbert Chitepo Street, Mutare', phones: [{ label: 'Sales & Admin', number: '0788 277 001' }] }
+  ]),
   instagram: '',
   facebook: '',
   announcement: ''
@@ -90,7 +95,9 @@ export const DEFAULT_SETTINGS = {
 
 export function getSettings() {
   const rows = db.prepare('SELECT key, value FROM settings').all();
-  return { ...DEFAULT_SETTINGS, ...Object.fromEntries(rows.map((r) => [r.key, r.value])) };
+  const settings = { ...DEFAULT_SETTINGS, ...Object.fromEntries(rows.map((r) => [r.key, r.value])) };
+  if (settings.phone === '0784779835') settings.phone = DEFAULT_SETTINGS.phone;
+  return settings;
 }
 
 export function saveSettings(values) {

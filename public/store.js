@@ -83,7 +83,7 @@
 
   const renderDrawer = () => {
     const items = readCart();
-    drawer.querySelector('.bag-lines').innerHTML = items.length ? items.map(cartLineHtml).join('') : '<li class="bag-empty"><span aria-hidden="true">✳</span><p>Your bag is empty.</p><a class="text-link" href="/#catalog" data-close-bag>Explore the edit →</a></li>';
+    drawer.querySelector('.bag-lines').innerHTML = items.length ? items.map(cartLineHtml).join('') : '<li class="bag-empty"><span aria-hidden="true">✳</span><p>Your bag is empty.</p><a class="text-link" href="/shop#catalog" data-close-bag>Explore the edit →</a></li>';
     drawer.querySelector('.bag-total strong').textContent = money(cart.subtotal());
     drawer.querySelector('.bag-foot').hidden = !items.length;
     document.querySelectorAll('[data-cart-count]').forEach((el) => { const n = cart.count(); el.textContent = n; el.hidden = !n; });
@@ -109,6 +109,30 @@
   const contactDefaults = {phone:'Business phone coming soon',whatsapp:'WhatsApp number coming soon',email:'Email address coming soon',address:'Address to be confirmed',instagram:'Instagram page coming soon',facebook:'Facebook page coming soon'};
   settingsReady.then((contact) => {
     renderDrawer();
+    document.querySelectorAll('[data-office-directory]').forEach((container) => {
+      const offices = Array.isArray(contact.offices) ? contact.offices : [];
+      if (!offices.length) { container.hidden = true; return; }
+      const heading = document.createElement('div');
+      heading.className = 'office-directory-heading';
+      heading.innerHTML = '<p class="eyebrow">FIND NUBURN</p><h2>Our Offices</h2>';
+      const grid = document.createElement('div');
+      grid.className = 'office-directory-grid';
+      for (const office of offices) {
+        const card = document.createElement('article');
+        card.className = 'office-card';
+        const title = document.createElement('h3'); title.textContent = office.city || 'Office'; card.append(title);
+        const address = document.createElement('p'); address.className = 'office-address'; address.textContent = office.address || ''; card.append(address);
+        for (const contactItem of office.phones || []) {
+          const phone = document.createElement('a');
+          phone.className = 'office-phone';
+          phone.href = `tel:${String(contactItem.number || '').replace(/[^+\d]/g, '')}`;
+          phone.textContent = contactItem.label ? `${contactItem.label}: ${contactItem.number}` : contactItem.number || '';
+          card.append(phone);
+        }
+        grid.append(card);
+      }
+      container.replaceChildren(heading, grid);
+    });
     document.querySelectorAll('[data-contact]').forEach((link) => {
       const type = link.dataset.contact;
       const value = (contact[type] || '').trim();

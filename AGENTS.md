@@ -32,9 +32,9 @@ server/
   index.js        all routes, page rendering (partials + meta tags), static serving
   partials/       header.html + footer.html, shared by every storefront page
 public/           storefront (served as-is)
-  index.html      home: hero, categories, catalog, ordering, contact
+  index.html      retail shop: hero, categories, catalog, ordering, contact (at /shop)
   story.html      Our story: brand background, mission, vision and values
-  manufacturing.html  Manufacturing division: services, process and enquiry links
+  manufacturing.html  primary homepage: manufacturing services, process and enquiry links (at /)
   product.html    product detail (?slug=)
   checkout.html   bag review + order request form
   favicon.svg

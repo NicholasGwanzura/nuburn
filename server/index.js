@@ -200,8 +200,10 @@ function updateProduct(id, f, slug, reason = 'Product update') {
 }
 
 function publicSettings() {
-  const { currency, phone, whatsapp, email, address, instagram, facebook, announcement } = getSettings();
-  return { currency, phone, whatsapp, email, address, instagram, facebook, announcement };
+  const { currency, phone, whatsapp, email, address, offices, instagram, facebook, announcement } = getSettings();
+  let officeDirectory = [];
+  try { officeDirectory = JSON.parse(offices || '[]'); } catch {}
+  return { currency, phone, whatsapp, email, address, offices: officeDirectory, instagram, facebook, announcement };
 }
 
 // ---------- storefront API ----------
@@ -558,7 +560,7 @@ function renderPage(req, res, page, meta, status = 200) {
 
 const HOME_DESCRIPTION = 'Nuburn Designs brings together expressive clothing and footwear for everyday style and every occasion.';
 
-app.get(['/', '/index.html'], (req, res) => renderPage(req, res, 'index', {
+app.get(['/shop', '/shop/', '/shop/index.html', '/index.html'], (req, res) => renderPage(req, res, 'index', {
   title: 'Nuburn Designs — Style That Speaks', description: HOME_DESCRIPTION, image: '/images/hero.jpg'
 }));
 
@@ -568,7 +570,46 @@ app.get(['/story', '/story.html'], (req, res) => renderPage(req, res, 'story', {
   image: '/images/story.jpg'
 }));
 
-app.get(['/manufacturing', '/manufacturing.html'], (req, res) => renderPage(req, res, 'manufacturing', {
+const MANUFACTURING_SERVICES = {
+  'african-attire': {
+    title: 'African Attire', label: '01 / CULTURE', image: '/images/manufacturing-african-attire.jpg',
+    summary: 'African-inspired clothing that celebrates culture, identity and personal style.',
+    description: 'From traditional wear to contemporary African fashion, we create garments for special occasions and everyday expression. Custom tailoring helps shape each design around the person who will wear it.',
+    products: ['Traditional and contemporary styles', 'Custom-made designs', 'Special-occasion outfits']
+  },
+  'corporate-wear': {
+    title: 'Corporate Wear', label: '02 / BUSINESS', image: '/images/manufacturing-corporate.jpg',
+    summary: 'Professional clothing that gives teams a smart, consistent identity.',
+    description: 'We make office uniforms and branded workwear for organisations looking for a considered, professional appearance. Options include shirts, trousers, skirts, jackets and blazers.',
+    products: ['Office uniforms', 'Branded workwear', 'Shirts, trousers and skirts', 'Jackets and blazers']
+  },
+  'security-uniforms': {
+    title: 'Security Uniforms', label: '03 / OPERATIONS', image: '/images/manufacturing-security.jpg',
+    summary: 'Durable, comfortable uniforms for everyday operational demands.',
+    description: 'Our security uniform range is designed for a professional appearance and practical daily wear, with options for security companies and their teams.',
+    products: ['Security shirts and trousers', 'Jackets and overalls', 'High-visibility workwear', 'Customised uniforms']
+  },
+  'school-uniforms': {
+    title: 'School Uniforms', label: '04 / LEARNING', image: '/images/manufacturing-school.jpg',
+    summary: 'School clothing designed for comfort, durability and a smart appearance.',
+    description: 'We manufacture uniform pieces for the school day, including everyday clothing, knitwear and sportswear for students.',
+    products: ['Shirts and blouses', 'Trousers and skirts', 'Dresses and jerseys', 'Sportswear and accessories']
+  }
+};
+
+app.get('/manufacturing/:serviceSlug', (req, res) => {
+  const service = MANUFACTURING_SERVICES[req.params.serviceSlug];
+  if (!service) return res.status(404).type('text').send('Page not found.');
+  const content = `<section class="manufacturing-service-hero section-wrap"><nav class="manufacturing-breadcrumb" aria-label="Breadcrumb"><a href="/">Manufacturing</a><span aria-hidden="true">/</span><span>${escapeAttr(service.title)}</span></nav><div class="manufacturing-service-detail"><div><p class="eyebrow">${escapeAttr(service.label)}</p><h1>${escapeAttr(service.title)}.</h1><p class="manufacturing-lead">${escapeAttr(service.summary)}</p><p>${escapeAttr(service.description)}</p><a class="button manufacturing-button" href="/#manufacturing-enquiry">Discuss an order <span aria-hidden="true">↗</span></a></div><figure class="manufacturing-detail-photo"><img src="${escapeAttr(service.image)}" alt="Illustrative ${escapeAttr(service.title.toLowerCase())} style imagery"><figcaption>Illustrative representative imagery</figcaption></figure></div></section><section class="manufacturing-detail-products section-wrap"><div><p class="eyebrow">MADE FOR YOUR NEEDS</p><h2>Explore the <em>range.</em></h2><p>Discuss sizes, quantities and a tailored solution with our team.</p></div><ul>${service.products.map((item) => `<li>${escapeAttr(item)}</li>`).join('')}</ul></section><div class="story-page-cta section-wrap"><p>See all manufacturing services.</p><a class="button manufacturing-button" href="/">Back to Manufacturing <span aria-hidden="true">↗</span></a></div>`;
+  const html = readText(path.join(PUBLIC_DIR, 'manufacturing-service.html'))
+    .replace('<!-- @meta -->', metaTags(req, { title: `${service.title} — Nuburn Designs`, description: service.summary, image: service.image }))
+    .replace('<!-- @header -->', readText(path.join(PARTIALS_DIR, 'header.html')))
+    .replace('<!-- @footer -->', readText(path.join(PARTIALS_DIR, 'footer.html')))
+    .replace('<!-- @service -->', content);
+  res.type('html').set('Cache-Control', 'no-cache').send(html);
+});
+
+app.get(['/', '/manufacturing', '/manufacturing.html'], (req, res) => renderPage(req, res, 'manufacturing', {
   title: 'Manufacturing division — Nuburn Designs',
   description: 'Explore Nuburn Designs garment manufacturing for African attire, corporate wear, security uniforms and school uniforms.'
 }));

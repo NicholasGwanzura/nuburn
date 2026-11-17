@@ -42,11 +42,12 @@ Text sits on top of the category tiles (top-left label, bottom-left title) and o
 
 ## Manufacturing division photography
 
-The `/manufacturing` page has optional photo slots. It renders a neutral editorial illustration until approved photography is added. Save photos with these exact names in this directory:
+The manufacturing homepage (`/`) has optional photo slots. It renders a neutral editorial illustration in service cards until approved garment photos are added. Save photos with these exact names in this directory:
 
 | File | Subject |
 | --- | --- |
 | `manufacturing-hero.jpg` | A real Nuburn garment maker at work in the workshop |
+| `manufacturing-process.jpg` | Workshop overview showing garment production |
 | `manufacturing-african-attire.jpg` | Finished African attire |
 | `manufacturing-corporate.jpg` | Finished corporate wear |
 | `manufacturing-security.jpg` | Finished security uniform |

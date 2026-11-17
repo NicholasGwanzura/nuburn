@@ -5,7 +5,7 @@
   const slug = new URLSearchParams(location.search).get('slug');
 
   const notFound = () => {
-    root.innerHTML = '<div class="empty-catalog"><span class="empty-star" aria-hidden="true">✳</span><h4>We couldn’t find that piece.</h4><p>It may have sold out or moved. Browse the full collection instead.</p><a href="/#catalog">Back to the shop →</a></div>';
+    root.innerHTML = '<div class="empty-catalog"><span class="empty-star" aria-hidden="true">✳</span><h4>We couldn’t find that piece.</h4><p>It may have sold out or moved. Browse the full collection instead.</p><a href="/shop#catalog">Back to the shop →</a></div>';
     document.querySelector('#crumb-category').textContent = 'Not found';
   };
   if (!slug) return notFound();
@@ -34,7 +34,7 @@
         </div>
         <p class="form-error" id="size-error" role="alert" hidden>Please choose a size first.</p>
         ${p.description ? `<div class="detail-description">${escapeHtml(p.description).split(/\n{2,}/).map((para) => `<p>${para.replace(/\n/g, '<br>')}</p>`).join('')}</div>` : ''}
-        <ul class="detail-notes"><li>Payment and delivery confirmed with you after you order</li><li>Questions about fit? <a href="/#contact">Chat with us</a></li></ul>
+        <ul class="detail-notes"><li>Payment and delivery confirmed with you after you order</li><li>Questions about fit? <a href="/shop#contact">Chat with us</a></li></ul>
       </div>
     </div>`;
 
