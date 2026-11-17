@@ -531,23 +531,79 @@ function formatMoney(cents, currency) {
 
 const siteUrl = (req) => (process.env.PUBLIC_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
 
-function metaTags(req, { title, description, image, type = 'website', price }) {
+const OG_SIZE = { width: 1200, height: 630 };
+const SITE_NAME = 'Nuburn Designs';
+const ORG_DESCRIPTION = 'Garment manufacturing and ready-to-wear clothing and footwear from Nuburn Designs, Zimbabwe.';
+
+// Canonical URL: the path only, with no tracking or filter query strings (product pages keep ?slug=).
+const canonicalFor = (req, keep = []) => {
+  const params = new URLSearchParams();
+  for (const key of keep) if (req.query[key]) params.set(key, String(req.query[key]));
+  const qs = params.toString();
+  return siteUrl(req) + (req.path.replace(/\/index\.html$|\.html$/, '').replace(/(.)\/$/, '$1') || '/') + (qs ? `?${qs}` : '');
+};
+
+const jsonLd = (data) => `<script type="application/ld+json">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`;
+
+function organizationLd(req) {
   const base = siteUrl(req);
-  const url = base + req.originalUrl;
+  const s = publicSettings();
+  const sameAs = [s.instagram, s.facebook].filter((v) => /^https?:\/\//.test(v || ''));
+  const org = {
+    '@context': 'https://schema.org', '@type': 'Organization', '@id': `${base}/#organization`,
+    name: SITE_NAME, url: `${base}/`, logo: `${base}/icon-512.png`, image: `${base}/images/og/og-manufacturing.jpg`,
+    description: ORG_DESCRIPTION
+  };
+  if (s.email) org.email = s.email;
+  if (s.phone) org.telephone = s.phone;
+  if (sameAs.length) org.sameAs = sameAs;
+  if (s.offices.length) org.location = s.offices.map((o) => ({
+    '@type': 'Place', name: `${SITE_NAME} ${o.city || ''}`.trim(),
+    address: { '@type': 'PostalAddress', streetAddress: String(o.address || '').replace(/\s*\n\s*/g, ', '), addressCountry: 'ZW' },
+    ...(o.phones?.[0]?.number ? { telephone: o.phones[0].number } : {})
+  }));
+  return org;
+}
+
+const breadcrumbLd = (req, items) => ({
+  '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+  itemListElement: items.map(([name, href], i) => ({ '@type': 'ListItem', position: i + 1, name, item: siteUrl(req) + href }))
+});
+
+function metaTags(req, { title, description, image = '/images/og/og-manufacturing.jpg', imageAlt, imageSize = OG_SIZE, type = 'website', price, noindex = false, canonical, structured = [] }) {
+  const base = siteUrl(req);
+  const url = canonical || canonicalFor(req);
+  const img = /^https?:\/\//.test(image) ? image : base + image;
+  const alt = imageAlt || title;
   const tags = [
     `<title>${escapeAttr(title)}</title>`,
     `<meta name="description" content="${escapeAttr(description)}">`,
+    `<meta name="robots" content="${noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large'}">`,
+    noindex ? '' : `<link rel="canonical" href="${escapeAttr(url)}">`,
     '<link rel="icon" href="/favicon.svg" type="image/svg+xml">',
-    `<meta property="og:site_name" content="Nuburn Designs">`,
+    '<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">',
+    '<link rel="apple-touch-icon" href="/apple-touch-icon.png">',
+    '<link rel="manifest" href="/site.webmanifest">',
+    `<meta property="og:site_name" content="${SITE_NAME}">`,
+    '<meta property="og:locale" content="en_GB">',
     `<meta property="og:type" content="${type}">`,
     `<meta property="og:title" content="${escapeAttr(title)}">`,
     `<meta property="og:description" content="${escapeAttr(description)}">`,
     `<meta property="og:url" content="${escapeAttr(url)}">`,
-    `<meta name="twitter:card" content="summary_large_image">`
+    `<meta property="og:image" content="${escapeAttr(img)}">`,
+    img.startsWith('https://') ? `<meta property="og:image:secure_url" content="${escapeAttr(img)}">` : '',
+    /\.jpe?g$/i.test(img) ? '<meta property="og:image:type" content="image/jpeg">' : '',
+    imageSize ? `<meta property="og:image:width" content="${imageSize.width}">\n  <meta property="og:image:height" content="${imageSize.height}">` : '',
+    `<meta property="og:image:alt" content="${escapeAttr(alt)}">`,
+    '<meta name="twitter:card" content="summary_large_image">',
+    `<meta name="twitter:title" content="${escapeAttr(title)}">`,
+    `<meta name="twitter:description" content="${escapeAttr(description)}">`,
+    `<meta name="twitter:image" content="${escapeAttr(img)}">`,
+    `<meta name="twitter:image:alt" content="${escapeAttr(alt)}">`
   ];
-  if (image) tags.push(`<meta property="og:image" content="${escapeAttr(base + image)}">`);
   if (price) tags.push(`<meta property="product:price:amount" content="${(price.cents / 100).toFixed(2)}">`, `<meta property="product:price:currency" content="${escapeAttr(price.currency)}">`);
-  return tags.join('\n  ');
+  for (const data of structured) tags.push(jsonLd(data));
+  return tags.filter(Boolean).join('\n  ');
 }
 
 function renderPage(req, res, page, meta, status = 200) {
@@ -561,13 +617,18 @@ function renderPage(req, res, page, meta, status = 200) {
 const HOME_DESCRIPTION = 'Nuburn Designs brings together expressive clothing and footwear for everyday style and every occasion.';
 
 app.get(['/shop', '/shop/', '/shop/index.html', '/index.html'], (req, res) => renderPage(req, res, 'index', {
-  title: 'Nuburn Designs | Style That Speaks', description: HOME_DESCRIPTION, image: '/images/hero.jpg'
+  title: 'Shop Clothing & Footwear | Nuburn Designs',
+  description: 'Shop Nuburn Designs clothing and footwear. Choose your size, add to your bag and send your order online. Delivery or collection in Zimbabwe.',
+  image: '/images/og/og-shop.jpg', imageAlt: 'Nuburn Designs: Style That Speaks. Quality That Lasts.',
+  canonical: siteUrl(req) + '/shop',
+  structured: [breadcrumbLd(req, [['Home', '/'], ['Shop', '/shop']])]
 }));
 
 app.get(['/story', '/story.html'], (req, res) => renderPage(req, res, 'story', {
   title: 'Our Story | Nuburn Designs',
   description: 'Discover the mission, vision and values behind Nuburn Designs clothing and footwear.',
-  image: '/images/story.jpg'
+  image: '/images/og/og-story.jpg', imageAlt: 'Our Story: Nuburn Designs',
+  structured: [breadcrumbLd(req, [['Home', '/'], ['Our Story', '/story']])]
 }));
 
 const MANUFACTURING_SERVICES = {
@@ -608,7 +669,7 @@ function renderShell(req, res, meta, content, status = 200) {
 
 function renderNotFound(req, res) {
   const content = '<section class="page-hero" aria-labelledby="nf-title"><img class="page-hero-img" src="/images/manufacturing-process.jpg" alt=""><div class="page-hero-inner section-wrap"><p class="eyebrow">Page not found</p><h1 id="nf-title">Lost the <em>Thread.</em></h1><p class="page-hero-lead">The page you were looking for has moved or no longer exists. Try the manufacturing services or browse the store.</p><div class="page-hero-actions"><a class="button ft-btn-light" href="/">Manufacturing</a><a class="ft-link-light" href="/shop">Shop the Collection <span aria-hidden="true">→</span></a></div></div></section>';
-  renderShell(req, res, { title: 'Page Not Found | Nuburn Designs', description: HOME_DESCRIPTION }, content, 404);
+  renderShell(req, res, { title: 'Page Not Found | Nuburn Designs', description: HOME_DESCRIPTION, noindex: true }, content, 404);
 }
 
 // The service template is only a shell for the routes below; don't serve it raw.
@@ -618,17 +679,28 @@ app.get('/manufacturing/:serviceSlug', (req, res) => {
   const service = MANUFACTURING_SERVICES[req.params.serviceSlug];
   if (!service) return renderNotFound(req, res);
   const content = `<section class="page-hero page-hero--tall" aria-labelledby="service-title"><img class="page-hero-img" src="${escapeAttr(service.image)}" alt="" fetchpriority="high"><div class="page-hero-inner section-wrap"><nav class="page-hero-crumbs" aria-label="Breadcrumb"><a href="/">Manufacturing</a><span aria-hidden="true">/</span><span>${escapeAttr(service.title)}</span></nav><p class="eyebrow">${escapeAttr(service.label)}</p><h1 id="service-title">${escapeAttr(service.title)}.</h1><p class="page-hero-lead">${escapeAttr(service.summary)}</p><div class="page-hero-actions"><a class="button ft-btn-light" href="/#manufacturing-enquiry">Discuss an Order</a></div><p class="page-hero-note">Illustrative imagery</p></div></section><section class="manufacturing-service-intro section-wrap"><p class="eyebrow">About this service</p><p>${escapeAttr(service.description)}</p></section><section class="manufacturing-detail-products section-wrap"><div><p class="eyebrow">MADE FOR YOUR NEEDS</p><h2>Explore the <em>Range.</em></h2><p>Discuss sizes, quantities and a tailored solution with our team.</p></div><ul>${service.products.map((item) => `<li>${escapeAttr(item)}</li>`).join('')}</ul></section><div class="story-page-cta section-wrap"><p>See All Manufacturing Services.</p><a class="button manufacturing-button" href="/">Back to Manufacturing</a></div>`;
-  renderShell(req, res, { title: `${service.title} | Nuburn Designs`, description: service.summary, image: service.image }, content);
+  renderShell(req, res, {
+    title: `${service.title} Manufacturing | Nuburn Designs`,
+    description: `${service.summary} ${service.products.join(', ')}. Made to order by Nuburn Designs, Zimbabwe.`,
+    image: `/images/og/og-${req.params.serviceSlug}.jpg`, imageAlt: `${service.title} by Nuburn Designs`,
+    structured: [
+      breadcrumbLd(req, [['Manufacturing', '/'], [service.title, `/manufacturing/${req.params.serviceSlug}`]]),
+      { '@context': 'https://schema.org', '@type': 'Service', name: `${service.title} Manufacturing`, serviceType: service.title, description: service.description, areaServed: 'ZW', provider: { '@id': `${siteUrl(req)}/#organization` }, url: canonicalFor(req) }
+    ]
+  }, content);
 });
 
 app.get(['/', '/manufacturing', '/manufacturing.html'], (req, res) => renderPage(req, res, 'manufacturing', {
-  title: 'Manufacturing Division | Nuburn Designs',
-  description: 'Explore Nuburn Designs garment manufacturing for African attire, corporate wear, security uniforms and school uniforms.'
+  title: 'Nuburn Designs | Garment Manufacturing & Uniforms in Zimbabwe',
+  description: 'Nuburn Designs designs and manufactures African attire, corporate wear, security uniforms and school uniforms for individuals, schools and organisations in Zimbabwe.',
+  image: '/images/og/og-manufacturing.jpg', imageAlt: 'Nuburn Designs Manufacturing: Made with Purpose. Worn with Pride.',
+  canonical: siteUrl(req) + '/',
+  structured: [organizationLd(req), { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE_NAME, url: siteUrl(req) + '/', publisher: { '@id': `${siteUrl(req)}/#organization` } }]
 }));
 
 app.get(['/product', '/product.html'], (req, res) => {
   const row = db.prepare('SELECT * FROM products WHERE slug = ? AND published = 1').get(String(req.query.slug || ''));
-  if (!row) return renderPage(req, res, 'product', { title: 'Not Found | Nuburn Designs', description: HOME_DESCRIPTION }, 404);
+  if (!row) return renderPage(req, res, 'product', { title: 'Product Not Found | Nuburn Designs', description: HOME_DESCRIPTION, image: '/images/og/og-shop.jpg', noindex: true }, 404);
   const product = serializeProduct(row);
   const { currency } = getSettings();
   const price = formatMoney(product.priceCents, currency);
@@ -636,15 +708,57 @@ app.get(['/product', '/product.html'], (req, res) => {
   renderPage(req, res, 'product', {
     title: `${product.name} · ${price} | Nuburn Designs`,
     description: `${price} · ${product.availability}${summary ? ` · ${summary}` : ''}`,
-    image: product.images[0]?.url || '/images/hero.jpg',
+    image: product.images[0]?.url || '/images/og/og-shop.jpg',
+    imageSize: product.images[0]?.url ? null : OG_SIZE,
+    imageAlt: product.name,
     type: 'product',
-    price: { cents: product.priceCents, currency }
+    price: { cents: product.priceCents, currency },
+    canonical: canonicalFor(req, ['slug']),
+    structured: [
+      breadcrumbLd(req, [['Shop', '/shop'], [product.name, `/product?slug=${encodeURIComponent(product.slug)}`]]),
+      {
+        '@context': 'https://schema.org', '@type': 'Product', name: product.name, sku: product.slug,
+        description: summary || product.name, category: product.category,
+        brand: { '@type': 'Brand', name: SITE_NAME },
+        image: (product.images.length ? product.images.map((im) => siteUrl(req) + im.url) : [siteUrl(req) + '/images/og/og-shop.jpg']),
+        offers: {
+          '@type': 'Offer', url: canonicalFor(req, ['slug']), priceCurrency: currency, price: (product.priceCents / 100).toFixed(2),
+          availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+          itemCondition: 'https://schema.org/NewCondition', seller: { '@type': 'Organization', name: SITE_NAME }
+        }
+      }
+    ]
   });
 });
 
 app.get(['/checkout', '/checkout.html'], (req, res) => renderPage(req, res, 'checkout', {
-  title: 'Your Bag | Nuburn Designs', description: HOME_DESCRIPTION
+  title: 'Your Bag | Nuburn Designs', description: HOME_DESCRIPTION, image: '/images/og/og-shop.jpg', noindex: true
 }));
+
+// ---------- SEO: robots, sitemap, web manifest ----------
+
+app.get('/robots.txt', (req, res) => {
+  res.type('text/plain').send(['User-agent: *', 'Allow: /', 'Disallow: /admin', 'Disallow: /api/', 'Disallow: /checkout', '', `Sitemap: ${siteUrl(req)}/sitemap.xml`, ''].join('\n'));
+});
+
+app.get('/sitemap.xml', (req, res) => {
+  const base = siteUrl(req);
+  const xmlEsc = (v) => String(v).replace(/[<>&'"]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;' }[c]));
+  const urls = [
+    { loc: '/', priority: '1.0' }, { loc: '/shop', priority: '0.9' }, { loc: '/story', priority: '0.6' },
+    ...Object.keys(MANUFACTURING_SERVICES).map((slug) => ({ loc: `/manufacturing/${slug}`, priority: '0.8' })),
+    ...db.prepare('SELECT slug, updated_at FROM products WHERE published = 1 ORDER BY id').all()
+      .map((p) => ({ loc: `/product?slug=${encodeURIComponent(p.slug)}`, lastmod: String(p.updated_at || '').slice(0, 10), priority: '0.7' }))
+  ];
+  res.type('application/xml').send(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${xmlEsc(base + u.loc)}</loc>${u.lastmod ? `<lastmod>${u.lastmod}</lastmod>` : ''}<priority>${u.priority}</priority></url>`).join('\n')}\n</urlset>\n`);
+});
+
+app.get('/site.webmanifest', (req, res) => {
+  res.type('application/manifest+json').send(JSON.stringify({
+    name: SITE_NAME, short_name: 'Nuburn', start_url: '/', display: 'browser', background_color: '#ffffff', theme_color: '#ffffff',
+    icons: [{ src: '/icon-192.png', sizes: '192x192', type: 'image/png' }, { src: '/icon-512.png', sizes: '512x512', type: 'image/png' }]
+  }));
+});
 
 // ---------- static files ----------
 
