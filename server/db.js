@@ -93,6 +93,33 @@ export const DEFAULT_SETTINGS = {
   announcement: ''
 };
 
+// Bring saved office directories forward without replacing addresses or other
+// numbers the owner may have edited in Admin Settings.
+const officePhoneUpdate = 'office_phone_update_20261118';
+if (!db.prepare('SELECT 1 FROM settings WHERE key = ?').get(officePhoneUpdate)) {
+  const saved = db.prepare("SELECT value FROM settings WHERE key = 'offices'").get();
+  if (saved) {
+    try {
+      const offices = JSON.parse(saved.value);
+      if (Array.isArray(offices)) {
+        for (const office of offices) {
+          const city = String(office.city || '').toLowerCase();
+          const phones = Array.isArray(office.phones) ? office.phones : [];
+          const obsolete = city.includes('bulawayo') ? new Set(['263789301038'])
+            : city.includes('harare') ? new Set(['263786520177', '263786520175'])
+              : city.includes('mutare') ? new Set(['0780193610', '0784779835']) : new Set();
+          office.phones = phones.filter((phone) => !obsolete.has(String(phone.number || '').replace(/\D/g, '')));
+          if (city.includes('mutare') && !office.phones.some((phone) => String(phone.number || '').replace(/\D/g, '') === '0774364397')) {
+            office.phones.push({ number: '0774364397' });
+          }
+        }
+        db.prepare("UPDATE settings SET value = ? WHERE key = 'offices'").run(JSON.stringify(offices));
+      }
+    } catch { /* Leave malformed owner data untouched. */ }
+  }
+  db.prepare('INSERT INTO settings (key, value) VALUES (?, ?)').run(officePhoneUpdate, '1');
+}
+
 export function getSettings() {
   const rows = db.prepare('SELECT key, value FROM settings').all();
   const settings = { ...DEFAULT_SETTINGS, ...Object.fromEntries(rows.map((r) => [r.key, r.value])) };
