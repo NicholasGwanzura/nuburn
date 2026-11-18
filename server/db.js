@@ -84,9 +84,9 @@ export const DEFAULT_SETTINGS = {
   email: '',
   address: 'Meikles Market, Shop Number 2, Herbert Chitepo Street, Mutare',
   offices: JSON.stringify([
-    { city: 'Bulawayo Office', address: 'CIPF Building, Jason Moyo & 9th Avenue\n2nd Floor, Office 208', phones: [{ number: '+263 78 930 1038' }, { number: '0774364397' }, { number: '0784779835' }] },
-    { city: 'Harare Office', address: '10 Fereday Drive, Eastlea\nHarare, Zimbabwe', phones: [{ number: '+263 78 652 0177' }, { number: '+263 78 652 0175' }, { number: '0774364397' }, { number: '0784779835' }] },
-    { city: 'Mutare Office', address: 'Meikles Market, Shop Number 2\nHerbert Chitepo Street, Mutare', phones: [{ number: '0780193610' }, { number: '0784779835' }] }
+    { city: 'Bulawayo Office', address: 'CIPF Building, Jason Moyo & 9th Avenue\n2nd Floor, Office 208', phones: [{ number: '0774364397' }, { number: '0784779835' }] },
+    { city: 'Harare Office', address: '10 Fereday Drive, Eastlea\nHarare, Zimbabwe', phones: [{ number: '0774364397' }, { number: '0784779835' }] },
+    { city: 'Mutare Office', address: 'Meikles Market, Shop Number 2\nHerbert Chitepo Street, Mutare', phones: [{ number: '0774364397' }] }
   ]),
   instagram: '',
   facebook: '',
