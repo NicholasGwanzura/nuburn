@@ -14,9 +14,10 @@
 <body class="manufacturing-page">
   <!-- @header -->
   <main id="main">
-    <section class="page-hero page-hero--tall" aria-labelledby="manufacturing-title">
+    <section class="page-hero page-hero--tall home-hero-slider" aria-labelledby="manufacturing-title" data-hero-slider>
       <img class="page-hero-img" src="/images/manufacturing-hero.jpg" alt="Illustrative workshop with rows of JUKI industrial sewing machines" fetchpriority="high" style="--focus-m:38% 50%">
-      <div class="page-hero-inner section-wrap">
+      <img class="page-hero-img hero-slide-background" src="/images/hero.jpg" alt="Models wearing imported corporate and casual styles" data-hero-background hidden>
+      <div class="page-hero-inner section-wrap hero-slide-copy" data-hero-slide="0">
         <p class="eyebrow">Nuburn Designs · Manufacturing division</p>
         <h1 id="manufacturing-title">Made with <em>Purpose.</em><br>Worn with Pride.</h1>
         <p class="page-hero-lead">We design, manufacture and supply garments for individuals, schools, companies and organisations, from African attire to uniforms.</p>
@@ -24,15 +25,26 @@
         <p class="page-hero-meta"><span>Design</span><span>Cut</span><span>Make</span><span>Finish</span></p>
         <p class="page-hero-note">Illustrative workshop image</p>
       </div>
+      <div class="page-hero-inner section-wrap hero-slide-copy" data-hero-slide="1" hidden>
+        <p class="eyebrow">Nuburn Designs · Clothing Supply</p>
+        <h2 class="page-hero-title" id="imported-hero-title">Quality Style.<br><em>Worldwide.</em></h2>
+        <p class="page-hero-lead">Corporate and casual clothing for all age groups, sourced from China, Tanzania and Dubai.</p>
+        <div class="page-hero-actions"><a class="button ft-btn-light" href="/manufacturing/imported-clothing">Explore Imported Clothing</a><a class="ft-link-light" href="#manufacturing-enquiry">Enquire About Supply <span aria-hidden="true">→</span></a></div>
+        <p class="page-hero-meta"><span>China</span><span>Tanzania</span><span>Dubai</span></p>
+        <p class="page-hero-note">Imported clothing · Corporate and casual</p>
+      </div>
+      <div class="hero-slider-controls" aria-label="Homepage hero slides"><div class="hero-slide-tabs"><button type="button" data-hero-go="0" aria-current="true">Manufacturing</button><button type="button" data-hero-go="1">Imported Clothing</button></div><div class="hero-slide-arrows"><button type="button" data-hero-prev aria-label="Previous slide">←</button><span data-hero-status aria-live="polite">01 / 02</span><button type="button" data-hero-next aria-label="Next slide">→</button></div></div>
     </section>
 
     <section class="manufacturing-services section-wrap" id="manufacturing-services" aria-labelledby="manufacturing-services-title">
-      <div class="manufacturing-section-head"><p class="eyebrow">WHAT WE MAKE</p><h2 id="manufacturing-services-title">Clothing for Every <em>Setting.</em></h2><p>Four areas of garment making, shaped around the people and purpose behind each order.</p></div>
+      <div class="manufacturing-section-head"><p class="eyebrow">OUR SERVICES</p><h2 id="manufacturing-services-title">Clothing for Every <em>Setting.</em></h2><p>Garment manufacturing and imported clothing supply, shaped around the people and purpose behind each order.</p></div>
       <div class="manufacturing-service-grid">
+        <a class="manufacturing-service-card" href="/manufacturing/imported-clothing"><div class="manufacturing-service-art"><img src="/images/hero.jpg" alt="Contemporary clothing styles" loading="lazy"><b class="service-image-note">Illustrative image</b></div><div class="manufacturing-service-copy"><h3>Imported Clothing</h3><p>Quality corporate and casual clothing for all age groups, sourced from China, Tanzania and Dubai.</p><ul><li>Corporate and casual styles</li><li>Clothing for all age groups</li><li>Individual and bulk supply enquiries</li></ul><span class="service-card-link">Explore Imported Clothing <b aria-hidden="true">→</b></span></div></a>
         <a class="manufacturing-service-card" href="/manufacturing/african-attire"><div class="manufacturing-service-art manufacturing-art-african"><img src="/images/manufacturing-african-attire.jpg" alt="Models wearing coordinated African print attire" onerror="this.remove()"><b class="service-image-note">Illustrative image</b></div><div class="manufacturing-service-copy"><h3>African Attire</h3><p>African-inspired outfits that celebrate culture, identity and elegance, from traditional wear to contemporary pieces and special-occasion designs.</p><ul><li>Traditional and contemporary styles</li><li>Custom tailoring</li><li>Special-occasion outfits</li></ul><span class="service-card-link">Explore African Attire <b aria-hidden="true">→</b></span></div></a>
         <a class="manufacturing-service-card" href="/manufacturing/corporate-wear"><div class="manufacturing-service-art manufacturing-art-corporate"><img src="/images/manufacturing-corporate.jpg" alt="Models wearing coordinated navy corporate clothing" onerror="this.remove()"><b class="service-image-note">Illustrative image</b></div><div class="manufacturing-service-copy"><h3>Corporate Wear</h3><p>Professional clothing that gives teams a smart, consistent identity, including office uniforms and branded workwear.</p><ul><li>Shirts, trousers and skirts</li><li>Jackets and blazers</li><li>Branded workwear</li></ul><span class="service-card-link">Explore Corporate Wear <b aria-hidden="true">→</b></span></div></a>
         <a class="manufacturing-service-card" href="/manufacturing/security-uniforms"><div class="manufacturing-service-art manufacturing-art-security"><img src="/images/manufacturing-security.jpg" alt="Security staff wearing coordinated navy uniforms" onerror="this.remove()"><b class="service-image-note">Illustrative image</b></div><div class="manufacturing-service-copy"><h3>Security Uniforms</h3><p>Durable, comfortable uniforms designed for everyday operational demands and a professional appearance.</p><ul><li>Security shirts and trousers</li><li>Jackets and overalls</li><li>High-visibility and custom options</li></ul><span class="service-card-link">Explore Security Uniforms <b aria-hidden="true">→</b></span></div></a>
         <a class="manufacturing-service-card" href="/manufacturing/school-uniforms"><div class="manufacturing-service-art manufacturing-art-school"><img src="/images/manufacturing-school.jpg" alt="Students wearing coordinated school uniforms" onerror="this.remove()"><b class="service-image-note">Illustrative image</b></div><div class="manufacturing-service-copy"><h3>School Uniforms</h3><p>Uniforms made for comfort, durability and a smart appearance through the school day.</p><ul><li>Shirts, blouses, trousers and skirts</li><li>Dresses and jerseys</li><li>Sportswear and accessories</li></ul><span class="service-card-link">Explore School Uniforms <b aria-hidden="true">→</b></span></div></a>
+        <a class="manufacturing-service-card" href="/manufacturing/safety-wear"><div class="manufacturing-service-art manufacturing-art-security"><img src="/images/manufacturing-safety.png" alt="PPE, overalls and laboratory coats for work teams" onerror="this.remove()"><b class="service-image-note">Illustrative image</b></div><div class="manufacturing-service-copy"><h3>Safety Wear</h3><p>PPE and protective workwear made for practical, comfortable use across workshops, industrial sites and laboratories.</p><ul><li>PPE, overalls and worksuits</li><li>Lab coats and dustcoats</li><li>Custom colours and team branding</li></ul><span class="service-card-link">Explore Safety Wear <b aria-hidden="true">→</b></span></div></a>
       </div>
     </section>
 

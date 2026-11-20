@@ -616,13 +616,7 @@ function renderPage(req, res, page, meta, status = 200) {
 
 const HOME_DESCRIPTION = 'Nuburn Designs brings together expressive clothing and footwear for everyday style and every occasion.';
 
-app.get(['/shop', '/shop/', '/shop/index.html', '/index.html'], (req, res) => renderPage(req, res, 'index', {
-  title: 'Shop Clothing & Footwear | Nuburn Designs',
-  description: 'Shop Nuburn Designs clothing and footwear. Choose your size, add to your bag and send your order online. Delivery or collection in Zimbabwe.',
-  image: '/images/og/og-shop.jpg', imageAlt: 'Nuburn Designs: Style That Speaks. Quality That Lasts.',
-  canonical: siteUrl(req) + '/shop',
-  structured: [breadcrumbLd(req, [['Home', '/'], ['Shop', '/shop']])]
-}));
+app.get(['/shop', '/shop/', '/shop/index.html', '/index.html', '/product', '/product.html', '/checkout', '/checkout.html'], (req, res) => res.redirect(301, '/'));
 
 app.get(['/story', '/story.html'], (req, res) => renderPage(req, res, 'story', {
   title: 'Our Story | Nuburn Designs',
@@ -636,27 +630,42 @@ const MANUFACTURING_SERVICES = {
     title: 'African Attire', label: 'Manufacturing', image: '/images/manufacturing-african-attire.jpg',
     summary: 'African-inspired clothing that celebrates culture, identity and personal style.',
     description: 'From traditional wear to contemporary African fashion, we create garments for special occasions and everyday expression. Custom tailoring helps shape each design around the person who will wear it.',
-    products: ['Traditional and contemporary styles', 'Custom-made designs', 'Special-occasion outfits']
+    products: ['Traditional and Contemporary Styles', 'Custom-Made Designs', 'Special-Occasion Outfits']
   },
   'corporate-wear': {
     title: 'Corporate Wear', label: 'Manufacturing', image: '/images/manufacturing-corporate.jpg',
     summary: 'Professional clothing that gives teams a smart, consistent identity.',
     description: 'We make office uniforms and branded workwear for organisations looking for a considered, professional appearance. Options include shirts, trousers, skirts, jackets and blazers.',
-    products: ['Office uniforms', 'Branded workwear', 'Shirts, trousers and skirts', 'Jackets and blazers']
+    products: ['Office Uniforms', 'Branded Workwear', 'Shirts, Trousers and Skirts', 'Jackets and Blazers']
   },
   'security-uniforms': {
     title: 'Security Uniforms', label: 'Manufacturing', image: '/images/manufacturing-security.jpg',
     summary: 'Durable, comfortable uniforms for everyday operational demands.',
     description: 'Our security uniform range is designed for a professional appearance and practical daily wear, with options for security companies and their teams.',
-    products: ['Security shirts and trousers', 'Jackets and overalls', 'High-visibility workwear', 'Customised uniforms']
+    products: ['Security Shirts and Trousers', 'Jackets and Overalls', 'High-Visibility Workwear', 'Customised Uniforms']
   },
   'school-uniforms': {
     title: 'School Uniforms', label: 'Manufacturing', image: '/images/manufacturing-school.jpg',
     summary: 'School clothing designed for comfort, durability and a smart appearance.',
     description: 'We manufacture uniform pieces for the school day, including everyday clothing, knitwear and sportswear for students.',
-    products: ['Shirts and blouses', 'Trousers and skirts', 'Dresses and jerseys', 'Sportswear and accessories']
+    products: ['Shirts and Blouses', 'Trousers and Skirts', 'Dresses and Jerseys', 'Sportswear and Accessories']
+  },
+  'safety-wear': {
+    title: 'Safety Wear', label: 'Manufacturing', image: '/images/manufacturing-safety.png',
+    summary: 'PPE and protective garments for industrial, workshop and laboratory teams.',
+    description: 'Our safety wear range includes durable protective clothing for teams that need dependable coverage and a professional appearance, with options for custom colours, sizing and branding.',
+    products: ['PPE', 'Overalls and Worksuits', 'Lab Coats', 'Dustcoats', 'Custom Branded Protective Wear']
+  },
+  'imported-clothing': {
+    title: 'Imported Clothing', label: 'Clothing Supply', image: '/images/hero.jpg',
+    summary: 'Quality corporate and casual clothing sourced from China, Tanzania and Dubai for all age groups.',
+    description: 'Nuburn Designs sources quality clothing from China, Tanzania and Dubai, with corporate and casual options for children, young people and adults. Contact us to discuss available ranges, sizing and bulk supply.',
+    products: ['Suits', 'Children’s Clothing', 'Adults’ Clothing', 'Formal Wear', 'Casual Wear'],
+    rangeImages: ['suits', 'children', 'adults', 'formal', 'casual']
   }
 };
+
+app.get('/imported-clothing', (req, res) => res.redirect(301, '/manufacturing/imported-clothing'));
 
 function renderShell(req, res, meta, content, status = 200) {
   const html = readText(path.join(PUBLIC_DIR, 'manufacturing-service.html'))
@@ -678,7 +687,7 @@ app.get(['/manufacturing-service', '/manufacturing-service.html'], (req, res) =>
 app.get('/manufacturing/:serviceSlug', (req, res) => {
   const service = MANUFACTURING_SERVICES[req.params.serviceSlug];
   if (!service) return renderNotFound(req, res);
-  const content = `<section class="page-hero page-hero--tall" aria-labelledby="service-title"><img class="page-hero-img" src="${escapeAttr(service.image)}" alt="" fetchpriority="high"><div class="page-hero-inner section-wrap"><nav class="page-hero-crumbs" aria-label="Breadcrumb"><a href="/">Manufacturing</a><span aria-hidden="true">/</span><span>${escapeAttr(service.title)}</span></nav><p class="eyebrow">${escapeAttr(service.label)}</p><h1 id="service-title">${escapeAttr(service.title)}.</h1><p class="page-hero-lead">${escapeAttr(service.summary)}</p><div class="page-hero-actions"><a class="button ft-btn-light" href="/#manufacturing-enquiry">Discuss an Order</a></div><p class="page-hero-note">Illustrative imagery</p></div></section><section class="manufacturing-service-intro section-wrap"><p class="eyebrow">About this service</p><p>${escapeAttr(service.description)}</p></section><section class="manufacturing-detail-products section-wrap"><div><p class="eyebrow">MADE FOR YOUR NEEDS</p><h2>Explore the <em>Range.</em></h2><p>Discuss sizes, quantities and a tailored solution with our team.</p></div><ul>${service.products.map((item) => `<li>${escapeAttr(item)}</li>`).join('')}</ul></section><div class="story-page-cta section-wrap"><p>See All Manufacturing Services.</p><a class="button manufacturing-button" href="/">Back to Manufacturing</a></div>`;
+  const content = `<section class="page-hero page-hero--tall" aria-labelledby="service-title"><img class="page-hero-img" src="${escapeAttr(service.image)}" alt="" fetchpriority="high"><div class="page-hero-inner section-wrap"><nav class="page-hero-crumbs" aria-label="Breadcrumb"><a href="/">Manufacturing</a><span aria-hidden="true">/</span><span>${escapeAttr(service.title)}</span></nav><p class="eyebrow">${escapeAttr(service.label)}</p><h1 id="service-title">${escapeAttr(service.title)}.</h1><p class="page-hero-lead">${escapeAttr(service.summary)}</p><div class="page-hero-actions"><a class="button ft-btn-light" href="/#manufacturing-enquiry">Discuss an Order</a></div><p class="page-hero-note">Illustrative imagery</p></div></section><section class="manufacturing-service-intro section-wrap"><p class="eyebrow">About this service</p><p>${escapeAttr(service.description)}</p></section><section class="manufacturing-detail-products section-wrap"><div><p class="eyebrow">MADE FOR YOUR NEEDS</p><h2>Explore the <em>Range.</em></h2><p>Discuss sizes, quantities and a tailored solution with our team.</p></div><ul class="${service.rangeImages ? 'range-image-grid' : ''}">${service.products.map((item, i) => `<li>${service.rangeImages ? `<img src="/images/imported-${escapeAttr(service.rangeImages[i])}.jpg" alt="${escapeAttr(item)}" loading="lazy"><span>${escapeAttr(item)}</span>` : escapeAttr(item)}</li>`).join('')}</ul></section><div class="story-page-cta section-wrap"><p>See All Manufacturing Services.</p><a class="button manufacturing-button" href="/">Back to Manufacturing</a></div>`;
   renderShell(req, res, {
     title: `${service.title} Manufacturing | Nuburn Designs`,
     description: `${service.summary} ${service.products.join(', ')}. Made to order by Nuburn Designs, Zimbabwe.`,
@@ -698,42 +707,6 @@ app.get(['/', '/manufacturing', '/manufacturing.html'], (req, res) => renderPage
   structured: [organizationLd(req), { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE_NAME, url: siteUrl(req) + '/', publisher: { '@id': `${siteUrl(req)}/#organization` } }]
 }));
 
-app.get(['/product', '/product.html'], (req, res) => {
-  const row = db.prepare('SELECT * FROM products WHERE slug = ? AND published = 1').get(String(req.query.slug || ''));
-  if (!row) return renderPage(req, res, 'product', { title: 'Product Not Found | Nuburn Designs', description: HOME_DESCRIPTION, image: '/images/og/og-shop.jpg', noindex: true }, 404);
-  const product = serializeProduct(row);
-  const { currency } = getSettings();
-  const price = formatMoney(product.priceCents, currency);
-  const summary = product.description.replace(/\s+/g, ' ').trim().slice(0, 140);
-  renderPage(req, res, 'product', {
-    title: `${product.name} · ${price} | Nuburn Designs`,
-    description: `${price} · ${product.availability}${summary ? ` · ${summary}` : ''}`,
-    image: product.images[0]?.url || '/images/og/og-shop.jpg',
-    imageSize: product.images[0]?.url ? null : OG_SIZE,
-    imageAlt: product.name,
-    type: 'product',
-    price: { cents: product.priceCents, currency },
-    canonical: canonicalFor(req, ['slug']),
-    structured: [
-      breadcrumbLd(req, [['Shop', '/shop'], [product.name, `/product?slug=${encodeURIComponent(product.slug)}`]]),
-      {
-        '@context': 'https://schema.org', '@type': 'Product', name: product.name, sku: product.slug,
-        description: summary || product.name, category: product.category,
-        brand: { '@type': 'Brand', name: SITE_NAME },
-        image: (product.images.length ? product.images.map((im) => siteUrl(req) + im.url) : [siteUrl(req) + '/images/og/og-shop.jpg']),
-        offers: {
-          '@type': 'Offer', url: canonicalFor(req, ['slug']), priceCurrency: currency, price: (product.priceCents / 100).toFixed(2),
-          availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
-          itemCondition: 'https://schema.org/NewCondition', seller: { '@type': 'Organization', name: SITE_NAME }
-        }
-      }
-    ]
-  });
-});
-
-app.get(['/checkout', '/checkout.html'], (req, res) => renderPage(req, res, 'checkout', {
-  title: 'Your Bag | Nuburn Designs', description: HOME_DESCRIPTION, image: '/images/og/og-shop.jpg', noindex: true
-}));
 
 // ---------- SEO: robots, sitemap, web manifest ----------
 
@@ -745,10 +718,8 @@ app.get('/sitemap.xml', (req, res) => {
   const base = siteUrl(req);
   const xmlEsc = (v) => String(v).replace(/[<>&'"]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;' }[c]));
   const urls = [
-    { loc: '/', priority: '1.0' }, { loc: '/shop', priority: '0.9' }, { loc: '/story', priority: '0.6' },
+    { loc: '/', priority: '1.0' }, { loc: '/story', priority: '0.6' },
     ...Object.keys(MANUFACTURING_SERVICES).map((slug) => ({ loc: `/manufacturing/${slug}`, priority: '0.8' })),
-    ...db.prepare('SELECT slug, updated_at FROM products WHERE published = 1 ORDER BY id').all()
-      .map((p) => ({ loc: `/product?slug=${encodeURIComponent(p.slug)}`, lastmod: String(p.updated_at || '').slice(0, 10), priority: '0.7' }))
   ];
   res.type('application/xml').send(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${xmlEsc(base + u.loc)}</loc>${u.lastmod ? `<lastmod>${u.lastmod}</lastmod>` : ''}<priority>${u.priority}</priority></url>`).join('\n')}\n</urlset>\n`);
 });

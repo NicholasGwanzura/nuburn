@@ -86,7 +86,7 @@ export const DEFAULT_SETTINGS = {
   offices: JSON.stringify([
     { city: 'Bulawayo Office', address: 'CIPF Building, Jason Moyo & 9th Avenue\n2nd Floor, Office 208', phones: [{ number: '0774364397' }, { number: '0784779835' }] },
     { city: 'Harare Office', address: '10 Fereday Drive, Eastlea\nHarare, Zimbabwe', phones: [{ number: '0774364397' }, { number: '0784779835' }] },
-    { city: 'Mutare Office', address: 'Meikles Market, Shop Number 2\nHerbert Chitepo Street, Mutare', phones: [{ number: '0774364397' }] }
+    { city: 'Mutare Office', address: 'Meikles Market, Shop Number 2\nHerbert Chitepo Street, Mutare', phones: [{ number: '0774364397' }, { number: '0780 193 610' }] }
   ]),
   instagram: '',
   facebook: '',
@@ -118,6 +118,25 @@ if (!db.prepare('SELECT 1 FROM settings WHERE key = ?').get(officePhoneUpdate)) 
     } catch { /* Leave malformed owner data untouched. */ }
   }
   db.prepare('INSERT INTO settings (key, value) VALUES (?, ?)').run(officePhoneUpdate, '1');
+}
+
+const mutarePhoneUpdate = 'mutare_phone_update_20261120';
+if (!db.prepare('SELECT 1 FROM settings WHERE key = ?').get(mutarePhoneUpdate)) {
+  const saved = db.prepare("SELECT value FROM settings WHERE key = 'offices'").get();
+  if (saved) {
+    try {
+      const offices = JSON.parse(saved.value);
+      const mutare = Array.isArray(offices) && offices.find((office) => String(office.city || '').toLowerCase().includes('mutare'));
+      if (mutare) {
+        mutare.phones = Array.isArray(mutare.phones) ? mutare.phones : [];
+        if (!mutare.phones.some((phone) => String(phone.number || '').replace(/\D/g, '') === '0780193610')) {
+          mutare.phones.push({ number: '0780 193 610' });
+        }
+        db.prepare("UPDATE settings SET value = ? WHERE key = 'offices'").run(JSON.stringify(offices));
+      }
+    } catch { /* Leave malformed owner data untouched. */ }
+  }
+  db.prepare('INSERT INTO settings (key, value) VALUES (?, ?)').run(mutarePhoneUpdate, '1');
 }
 
 export function getSettings() {

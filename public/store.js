@@ -191,6 +191,32 @@
   window.addEventListener('scroll', syncHeader, { passive: true });
   syncHeader();
 
+  const heroSlider = document.querySelector('[data-hero-slider]');
+  if (heroSlider) {
+    const slides = [...heroSlider.querySelectorAll('[data-hero-slide]')];
+    const backgrounds = [...heroSlider.querySelectorAll('[data-hero-background]')];
+    const status = heroSlider.querySelector('[data-hero-status]');
+    let activeSlide = 0;
+    const showSlide = (index) => {
+      activeSlide = (index + slides.length) % slides.length;
+      slides.forEach((slide, i) => { slide.hidden = i !== activeSlide; });
+      backgrounds.forEach((img, i) => { img.hidden = i !== activeSlide - 1; });
+      heroSlider.querySelectorAll('[data-hero-go]').forEach((button, i) => button.setAttribute('aria-current', String(i === activeSlide)));
+      heroSlider.setAttribute('aria-labelledby', activeSlide ? 'imported-hero-title' : 'manufacturing-title');
+      if (status) status.textContent = `0${activeSlide + 1} / 0${slides.length}`;
+    };
+    heroSlider.querySelector('[data-hero-prev]')?.addEventListener('click', () => showSlide(activeSlide - 1));
+    heroSlider.querySelector('[data-hero-next]')?.addEventListener('click', () => showSlide(activeSlide + 1));
+    heroSlider.querySelectorAll('[data-hero-go]').forEach((button) => button.addEventListener('click', () => showSlide(Number(button.dataset.heroGo))));
+    heroSlider.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+        event.preventDefault();
+        showSlide(activeSlide + (event.key === 'ArrowRight' ? 1 : -1));
+      }
+    });
+    showSlide(0);
+  }
+
   const setMenu = (open) => {
     if (!toggle || !nav) return;
     toggle.setAttribute('aria-expanded', String(open));
