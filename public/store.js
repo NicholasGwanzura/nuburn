@@ -175,7 +175,8 @@
 
   // Highlight the current section in the main nav.
   const path = location.pathname.replace(/\/+$/, '') || '/';
-  const section = path === '/' || path.startsWith('/manufacturing') ? 'manufacturing'
+  const section = path === '/imported-clothing' || path === '/manufacturing/imported-clothing' ? 'imports'
+    : path === '/' || path.startsWith('/manufacturing') ? 'manufacturing'
     : /^\/(shop|product|checkout|index)/.test(path) ? 'shop'
     : path.startsWith('/story') ? 'story' : '';
   nav?.querySelector(`[data-nav="${section}"]`)?.setAttribute('aria-current', 'page');
